@@ -24,16 +24,16 @@
 
 (defun create-chat (platform platform-id &key (type :chat) raw)
   "Создает новый чат в базе данных."
-  (with-transaction ()
-    (mito:create-dao 'chat
-                     :platform platform
-                     :platform-id platform-id
-                     :type type
-                     :raw (or raw (make-hash-table)))))
+  (mito:create-dao 'chat
+                   :platform platform
+                   :platform-id platform-id
+                   :type type
+                   :raw (or raw (make-hash-table))))
 
 (defun get-chat (id)
   "Возвращает чат по его ID."
   (mito:find-dao 'chat :id id))
+
 
 (defun find-chat-by-platform-id (platform platform-id &optional (type :chat))
   "Находит чат по platform, platform-id и type."

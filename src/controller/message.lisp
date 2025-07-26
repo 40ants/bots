@@ -19,13 +19,13 @@
 (in-package #:40ants-bots/controller/message)
 
 
-(defun create-message (user text &optional raw)
+(defun create-message (chat user text &optional raw)
   "Создает новое сообщение в базе данных."
-  (with-transaction ()
-    (mito:create-dao 'message
-                     :user user
-                     :text text
-                     :raw (or raw (make-hash-table)))))
+  (mito:create-dao 'message
+                   :chat chat
+                   :user user
+                   :text text
+                   :raw (or raw (make-hash-table))))
 
 (defun get-message (id)
   "Возвращает сообщение по его ID."

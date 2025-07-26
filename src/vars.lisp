@@ -7,3 +7,6 @@
 
 (defvar-unbound *user*
   "Will be bound to a current user model instance of type 40ANTS-BOTS/MODELS/USER:USER during request processing.")
+
+(defvar-unbound *current-chat*
+  "Содержит текущий активный чат, с которым работает бот.")
