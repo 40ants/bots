@@ -1,0 +1,43 @@
+(uiop:define-package #:40ants-bots/controller/chat
+  (:use #:cl)
+  (:import-from #:40ants-bots/models/chat
+                #:chat
+                #:chat-id
+                #:chat-platform
+                #:chat-platform-id
+                #:chat-raw
+                #:chat-created-at
+                #:chat-updated-at)
+  (:import-from #:40ants-bots/db/utils
+                #:with-transaction)
+  (:export #:create-chat
+           #:get-chat
+           #:find-chat-by-platform-id
+           #:list-chats))
+(in-package #:40ants-bots/controller/chat)
+
+
+(defun create-chat (platform platform-id &optional raw)
+  "Создает новый чат в базе данных."
+  (with-transaction ()
+    (mito:create-dao 'chat
+                     :platform platform
+                     :platform-id platform-id
+                     :raw (or raw (make-hash-table)))))
+
+(defun get-chat (id)
+  "Возвращает чат по его ID."
+  (mito:find-dao 'chat :id id))
+
+(defun find-chat-by-platform-id (platform platform-id)
+  "Находит чат по platform и platform-id."
+  (mito:find-dao 'chat
+                 :platform platform
+                 :platform-id platform-id))
+
+(defun list-chats (&key (limit 100) (offset 0))
+  "Возвращает список чатов с пагинацией."
+  (mito:select-dao 'chat
+    (mito:limit limit)
+    (mito:offset offset)
+    (mito:order-by (:desc :created-at))))
