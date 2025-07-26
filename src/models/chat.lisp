@@ -9,6 +9,7 @@
            #:chat-id
            #:chat-platform
            #:chat-platform-id
+           #:chat-type
            #:chat-raw
            #:chat-created-at
            #:chat-updated-at))
@@ -23,6 +24,12 @@
              :deflate #'keyword-to-db)
    (platform-id :initarg :platform-id
                 :col-type :bigint)
+   (type :initarg :type
+         :col-type :chat_types
+         :type keyword
+         :inflate #'keyword-from-db
+         :deflate #'keyword-to-db
+         :initform :chat)
    (raw :initarg :raw
         :col-type :jsonb
         :type hash-table
