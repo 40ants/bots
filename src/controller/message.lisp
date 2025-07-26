@@ -9,6 +9,10 @@
                 #:message-created-at)
   (:import-from #:40ants-bots/db/utils
                 #:with-transaction)
+  (:import-from #:sxql
+                #:order-by
+                #:offset
+                #:limit)
   (:export #:create-message
            #:get-message
            #:list-messages))
@@ -30,6 +34,6 @@
 (defun list-messages (&key (limit 100) (offset 0))
   "Возвращает список сообщений с пагинацией."
   (mito:select-dao 'message
-    (mito:limit limit)
-    (mito:offset offset)
-    (mito:order-by (:desc :created-at))))
+    (limit limit)
+    (offset offset)
+    (order-by (:desc :created-at))))

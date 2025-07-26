@@ -11,6 +11,10 @@
                 #:chat-updated-at)
   (:import-from #:40ants-bots/db/utils
                 #:with-transaction)
+  (:import-from #:sxql
+                #:order-by
+                #:offset
+                #:limit)
   (:export #:create-chat
            #:get-chat
            #:find-chat-by-platform-id
@@ -41,6 +45,6 @@
 (defun list-chats (&key (limit 100) (offset 0))
   "Возвращает список чатов с пагинацией."
   (mito:select-dao 'chat
-    (mito:limit limit)
-    (mito:offset offset)
-    (mito:order-by (:desc :created-at))))
+    (limit limit)
+    (offset offset)
+    (order-by (:desc :created-at))))

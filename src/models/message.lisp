@@ -7,6 +7,8 @@
                 #:keyword-to-db)
   (:import-from #:40ants-bots/models/user
                 #:user)
+  (:import-from #:40ants-bots/models/chat
+                #:chat)
   (:export #:message
            #:message-id
            #:message-user
