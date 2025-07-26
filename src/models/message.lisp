@@ -17,9 +17,14 @@
 
 
 (mito:deftable message ()
-  ((user :initarg :user
-         :col-type user
-         :references ((user id)))
+  ((chat :initarg :chat
+         :col-type chat
+         :references ((chat id)))
+   (platform :initarg :platform
+             :col-type :supported_platforms
+             :type keyword
+             :inflate #'keyword-from-db
+             :deflate #'keyword-to-db)
    (text :initarg :text
          :col-type :text
          :type string)
