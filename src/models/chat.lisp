@@ -34,11 +34,5 @@
         :col-type :jsonb
         :type hash-table
         :inflate #'hash-from-db
-        :deflate #'hash-to-db)
-   (created-at :initarg :created-at
-               :col-type :timestamptz
-               :initform (local-time:now))
-   (updated-at :initarg :updated-at
-               :col-type :timestamptz
-               :initform (local-time:now)))
+        :deflate #'hash-to-db))
   (:table-name "bots.chats"))

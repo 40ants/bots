@@ -19,9 +19,11 @@
 (in-package #:40ants-bots/controller/message)
 
 
-(defun create-message (chat user text &optional raw)
+(defun create-message (platform platform-id chat user text &key raw)
   "Создает новое сообщение в базе данных."
   (mito:create-dao 'message
+                   :platform platform
+                   :platform-id platform-id
                    :chat chat
                    :user user
                    :text text

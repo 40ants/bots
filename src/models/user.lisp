@@ -14,7 +14,12 @@
 
 
 (mito:deftable user ()
-  ((platform-id :initarg :platform-id
+  ((platform :initarg :platform
+             :col-type :supported_platforms
+             :type keyword
+             :inflate #'keyword-from-db
+             :deflate #'keyword-to-db)
+   (platform-id :initarg :platform-id
                 :col-type :bigint
                 :type keyword)
    (username :initarg :username

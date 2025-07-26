@@ -5,7 +5,7 @@
 (in-package #:40ants-bots/vars)
 
 
-(defvar-unbound *user*
+(defvar-unbound *current-user*
   "Will be bound to a current user model instance of type 40ANTS-BOTS/MODELS/USER:USER during request processing.")
 
 (defvar-unbound *current-chat*

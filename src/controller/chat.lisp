@@ -11,14 +11,18 @@
                 #:chat-updated-at)
   (:import-from #:40ants-bots/db/utils
                 #:with-transaction)
+  (:import-from #:40ants-bots/vars
+                #:*current-chat*)
   (:import-from #:sxql
                 #:order-by
                 #:offset
                 #:limit)
   (:export #:create-chat
-           #:get-chat
-           #:find-chat-by-platform-id
-           #:list-chats))
+           #:get-chat-by-id
+           #:get-chat-by-platform-id
+           #:list-chats
+           #:get-or-create-chat
+           #:get-current-chat))
 (in-package #:40ants-bots/controller/chat)
 
 
@@ -30,12 +34,13 @@
                    :type type
                    :raw (or raw (make-hash-table))))
 
-(defun get-chat (id)
+
+(defun get-chat-by-id (id)
   "Возвращает чат по его ID."
   (mito:find-dao 'chat :id id))
 
 
-(defun find-chat-by-platform-id (platform platform-id &optional (type :chat))
+(defun get-chat-by-platform-id (platform platform-id &optional (type :chat))
   "Находит чат по platform, platform-id и type."
   (mito:find-dao 'chat
                  :platform platform
@@ -48,3 +53,16 @@
     (limit limit)
     (offset offset)
     (order-by (:desc :created-at))))
+
+
+(defun get-or-create-chat (platform platform-id &key (type :chat) raw)
+  "Находит или создает чат по platform, platform-id и type."
+  (or (get-chat-by-platform-id platform platform-id type)
+      (create-chat platform platform-id :type type :raw raw)))
+
+
+(defun get-current-chat ()
+  "Возвращает текущий активный чат из переменной *current-chat*."
+  (unless *current-chat*
+    (error "Use GET-CURRENT-CHAT during message processing."))
+  *current-chat*)
