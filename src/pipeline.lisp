@@ -16,7 +16,9 @@
   (:import-from #:40ants-bots/controller/message
                 #:create-message)
   (:import-from #:serapeum
-                #:->))
+                #:->)
+  (:import-from #:cl-telegram-bot2/high
+                #:collect-sent-messages))
 (in-package #:40ants-bot/pipeline)
 
 
@@ -26,25 +28,69 @@
     (values (or null string)
             &optional))
 
-(defun get-text-from-update-if-possible (update)
-  (let* ((message (cl-telegram-bot2/api:update-message update))
-         (text (when message
+(defun get-text-from-message-if-possible (message)
+  (let* ((text (when message
                  (or (cl-telegram-bot2/api:message-text message)
                      (cl-telegram-bot2/api:message-caption message)))))
     text))
+
+(defun get-text-from-update-if-possible (update)
+  (let* ((message (cl-telegram-bot2/api:update-message update)))
+    (when message
+      (get-text-from-message-if-possible message))))
+
+
+(defvar *supported-message-types*
+  '(cl-telegram-bot2/api:message
+    cl-telegram-bot2/api::edited-message
+    cl-telegram-bot2/api::channel-post
+    cl-telegram-bot2/api::edited-channel-post
+    cl-telegram-bot2/api:business-connection
+    cl-telegram-bot2/api::business-message
+    cl-telegram-bot2/api::edited-business-message
+    cl-telegram-bot2/api::deleted-business-messages
+    cl-telegram-bot2/api::message-reaction
+    cl-telegram-bot2/api::message-reaction-count
+    cl-telegram-bot2/api:inline-query
+    cl-telegram-bot2/api:chosen-inline-result
+    cl-telegram-bot2/api:callback-query
+    cl-telegram-bot2/api:shipping-query
+    cl-telegram-bot2/api:pre-checkout-query
+    cl-telegram-bot2/api::purchased-paid-media
+    cl-telegram-bot2/api:poll
+    cl-telegram-bot2/api:poll-answer
+    cl-telegram-bot2/api::my-chat-member
+    cl-telegram-bot2/api:chat-member
+    cl-telegram-bot2/api:chat-join-request
+    cl-telegram-bot2/api:chat-boost
+    cl-telegram-bot2/api::removed-chat-boost))
+
+
+(defun get-message-from-update (update)
+  "Return message, message type and message-id."
+  (loop for slot in *supported-message-types*
+        when (slot-boundp update slot)
+          do (let ((message (slot-value update slot)))
+               (return message))))
 
 
 (defmethod cl-telegram-bot2/generics:process :around ((bot bot) (state null) (update cl-telegram-bot2/api:update))
   (40ants-bots/db:with-connection ()
     (let* ((platform :telegram)
+           ;; Не все типы message могут быть привязаны к автору.
+           ;; У тех что отправлены в канал, from не заполнено.
            (api-user (cl-telegram-bot2/pipeline::get-user update))
-           (user-platform-id (cl-telegram-bot2/api:user-id api-user))
-           (username (cl-telegram-bot2/api:user-username api-user))
-           (user-as-json (cl-telegram-bot2/spec::unparse api-user))
-           (user (get-or-create-user platform
-                                     user-platform-id
-                                     username
-                                     user-as-json))
+           (user-platform-id (when api-user
+                               (cl-telegram-bot2/api:user-id api-user)))
+           (username (when api-user
+                       (cl-telegram-bot2/api:user-username api-user)))
+           (user-as-json (when api-user
+                               (cl-telegram-bot2/spec::unparse api-user)))
+           (user (when api-user
+                       (get-or-create-user platform
+                                           user-platform-id
+                                           username
+                                           user-as-json)))
            (api-chat (cl-telegram-bot2/pipeline::get-chat update))
            (chat-platform-id (cl-telegram-bot2/api:chat-id api-chat))
            (chat-type (make-keyword (string-upcase
@@ -55,19 +101,39 @@
                                      chat-platform-id
                                      :type chat-type
                                      :raw chat-as-json))
-           (update-platform-id (cl-telegram-bot2/api:update-update-id update))
-           (update-as-json (cl-telegram-bot2/spec::unparse update))
-           (message (create-message platform
-                                    update-platform-id
-                                    chat
-                                    user
-                                    (or (get-text-from-update-if-possible update)
-                                        "No text")
-                                    :raw update-as-json))
+           ;; (update-platform-id (cl-telegram-bot2/api:update-update-id update))
+           ;; (update-as-json (cl-telegram-bot2/spec::unparse update))
            (*current-user* user)
            (*current-chat* chat))
-      (declare (ignore message))
-      
-      (push (list state update *current-user*)
-            *updates*)
-      (call-next-method))))
+      (flet ((save-message (message)
+               (let ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
+                     (message-as-json (cl-telegram-bot2/spec::unparse message)))
+                 (create-message platform
+                                 message-platform-id
+                                 chat
+                                 user
+                                 (or (get-text-from-message-if-possible message)
+                                     "No text")
+                                 :raw message-as-json)
+                 (values))))
+
+        (save-message (get-message-from-update update))
+        ;; (create-message platform
+        ;;                 update-platform-id
+        ;;                 chat
+        ;;                 user
+        ;;                 (or (get-text-from-update-if-possible update)
+        ;;                     "No text")
+        ;;                 :raw update-as-json)
+        
+        (push (list state update *current-user*)
+              *updates*)
+
+        (multiple-value-bind (sent-messages result)
+            (collect-sent-messages
+              (call-next-method))
+         
+          (loop for message in sent-messages
+                do (log:error "Sent message" message)
+                   (save-message message))
+          (values result))))))
