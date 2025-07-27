@@ -18,7 +18,11 @@
   (:import-from #:serapeum
                 #:->)
   (:import-from #:cl-telegram-bot2/high
-                #:collect-sent-messages))
+                #:collect-sent-messages)
+  (:import-from #:cl-telegram-bot2/generics
+                #:process)
+  (:import-from #:cl-telegram-bot2/vars
+                #:*default-special-bindings*))
 (in-package #:40ants-bot/pipeline)
 
 
@@ -74,7 +78,7 @@
                (return message))))
 
 
-(defmethod cl-telegram-bot2/generics:process :around ((bot bot) (state null) (update cl-telegram-bot2/api:update))
+(defmethod process :around ((bot bot) (state null) (update cl-telegram-bot2/api:update))
   (40ants-bots/db:with-connection ()
     (let* ((platform :telegram)
            ;; Не все типы message могут быть привязаны к автору.
@@ -85,12 +89,12 @@
            (username (when api-user
                        (cl-telegram-bot2/api:user-username api-user)))
            (user-as-json (when api-user
-                               (cl-telegram-bot2/spec::unparse api-user)))
+                           (cl-telegram-bot2/spec::unparse api-user)))
            (user (when api-user
-                       (get-or-create-user platform
-                                           user-platform-id
-                                           username
-                                           user-as-json)))
+                   (get-or-create-user platform
+                                       user-platform-id
+                                       username
+                                       user-as-json)))
            (api-chat (cl-telegram-bot2/pipeline::get-chat update))
            (chat-platform-id (cl-telegram-bot2/api:chat-id api-chat))
            (chat-type (make-keyword (string-upcase
@@ -104,7 +108,12 @@
            ;; (update-platform-id (cl-telegram-bot2/api:update-update-id update))
            ;; (update-as-json (cl-telegram-bot2/spec::unparse update))
            (*current-user* user)
-           (*current-chat* chat))
+           (*current-chat* chat)
+           (*default-special-bindings*
+             (list*
+              '(*current-user* . *current-user*)
+              '(*current-chat* . *current-chat*)
+              *default-special-bindings*)))
       (flet ((save-message (message)
                (let ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
                      (message-as-json (cl-telegram-bot2/spec::unparse message)))

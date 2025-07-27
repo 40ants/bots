@@ -6,7 +6,7 @@
                 #:create-dao
                 #:find-dao)
   (:import-from #:40ants-bots/vars
-                #:*user*)
+                #:*current-user*)
   (:export #:get-user
            #:create-user
            #:get-or-create-user
@@ -15,9 +15,9 @@
 
 
 (defun get-current-user ()
-  (unless (boundp '*user*)
+  (unless (boundp '*current-user*)
     (error "GET-CURRENT-USER can be used only during request processing."))
-  *user*)
+  *current-user*)
 
 
 (defun get-user (platform platform-id)
