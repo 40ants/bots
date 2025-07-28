@@ -8,7 +8,7 @@
   (:import-from #:cl-telegram-bot2/errors
                 #:error-description
                 #:telegram-error)
-  (:import-from #:40ants-bots/controller/chat
+  (:import-from #:40ants-bots/controllers/chat
                 #:get-private-chat)
   (:import-from #:40ants-bots/models/chat
                 #:chat-platform-id)

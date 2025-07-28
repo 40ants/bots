@@ -13,7 +13,7 @@
                "mito"
                "40ants-bots/core"
                "40ants-bots/pipeline"
-               "40ants-bots/controller/chat"
-               "40ants-bots/controller/message"
-               "40ants-bots/controller/user")
+               "40ants-bots/controllers/chat"
+               "40ants-bots/controllers/message"
+               "40ants-bots/controllers/user")
   :in-order-to ((test-op (test-op "40ants-bots-tests"))))

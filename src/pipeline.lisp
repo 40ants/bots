@@ -7,13 +7,13 @@
   (:import-from #:40ants-bots/vars
                 #:*current-user*
                 #:*current-chat*)
-  (:import-from #:40ants-bots/controller/user
+  (:import-from #:40ants-bots/controllers/user
                 #:get-or-create-user)
-  (:import-from #:40ants-bots/controller/chat
+  (:import-from #:40ants-bots/controllers/chat
                 #:get-or-create-chat)
   (:import-from #:alexandria
                 #:make-keyword)
-  (:import-from #:40ants-bots/controller/message
+  (:import-from #:40ants-bots/controllers/message
                 #:create-message)
   (:import-from #:serapeum
                 #:->)

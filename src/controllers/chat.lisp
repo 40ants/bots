@@ -1,4 +1,4 @@
-(uiop:define-package #:40ants-bots/controller/chat
+(uiop:define-package #:40ants-bots/controllers/chat
   (:use #:cl)
   (:import-from #:40ants-bots/models/chat
                 #:chat
@@ -28,7 +28,7 @@
            #:get-or-create-chat
            #:get-current-chat
            #:get-private-chat))
-(in-package #:40ants-bots/controller/chat)
+(in-package #:40ants-bots/controllers/chat)
 
 
 (defmethod print-object ((obj chat) stream)

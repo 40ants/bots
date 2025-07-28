@@ -1,4 +1,4 @@
-(uiop:define-package #:40ants-bots/controller/user
+(uiop:define-package #:40ants-bots/controllers/user
   (:use #:cl)
   (:import-from #:40ants-bots/models/user
                 #:user-platform
@@ -14,7 +14,7 @@
            #:create-user
            #:get-or-create-user
            #:get-current-user))
-(in-package #:40ants-bots/controller/user)
+(in-package #:40ants-bots/controllers/user)
 
 
 (defmethod print-object ((obj user) stream)

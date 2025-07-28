@@ -1,4 +1,4 @@
-(uiop:define-package #:40ants-bots/controller/message
+(uiop:define-package #:40ants-bots/controllers/message
   (:use #:cl)
   (:import-from #:40ants-bots/models/message
                 #:message
@@ -16,7 +16,7 @@
   (:export #:create-message
            #:get-message
            #:list-messages))
-(in-package #:40ants-bots/controller/message)
+(in-package #:40ants-bots/controllers/message)
 
 
 (defun create-message (platform platform-id chat user text &key raw)
