@@ -20,7 +20,7 @@
   (:import-from #:cl-telegram-bot2/high
                 #:collect-sent-messages)
   (:import-from #:cl-telegram-bot2/generics
-                #:process)
+                #:process-update)
   (:import-from #:cl-telegram-bot2/vars
                 #:*default-special-bindings*)
   (:import-from #:40ants-bots/db
@@ -80,7 +80,7 @@
                (return message))))
 
 
-(defmethod process :around ((bot bot) (state null) (update cl-telegram-bot2/api:update))
+(defmethod process-update :around ((bot bot) (update cl-telegram-bot2/api:update))
   (let* ((platform :telegram)
          ;; Не все типы message могут быть привязаны к автору.
          ;; У тех что отправлены в канал, from не заполнено.
@@ -115,7 +115,7 @@
             '(*current-user* . *current-user*)
             '(*current-chat* . *current-chat*)
             *default-special-bindings*)))
-    (flet ((save-message (message)
+    (flet ((save-message (message &key incomingp)
              (let ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
                    (message-as-json (cl-telegram-bot2/spec::unparse message)))
                (create-message platform
@@ -124,21 +124,24 @@
                                user
                                (or (get-text-from-message-if-possible message)
                                    "No text")
+                               :incomingp incomingp
                                :raw message-as-json)
                (values))))
 
       (let ((payload (get-message-from-update update)))
         (when (typep payload 'cl-telegram-bot2/api:message)
-          (save-message payload)))
+          (save-message payload
+                        :incomingp t)))
         
-      (push (list state update *current-user*)
+      (push (list update *current-user*)
             *updates*)
 
       (multiple-value-bind (sent-messages result)
           (collect-sent-messages
             (call-next-method))
-         
+
         (loop for message in sent-messages
               do (log:error "Sent message" message)
-                 (save-message message))
+                 (save-message message
+                               :incomingp nil))
         (values result)))))

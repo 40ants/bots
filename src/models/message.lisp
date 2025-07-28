@@ -15,17 +15,18 @@
            #:message-user
            #:message-text
            #:message-raw
-           #:message-created-at))
+           #:message-created-at
+           #:message-incoming-p))
 (in-package #:40ants-bots/models/message)
 
 
 (mito:deftable message ()
   ((chat :initarg :chat
          :col-type chat
-         :references ((chat id)))
+         :references (chat id))
    (user :initarg :user
          :col-type user
-         :references ((user id)))
+         :references (user id))
    (platform :initarg :platform
              :col-type :supported_platforms
              :type keyword
@@ -36,6 +37,10 @@
    (text :initarg :text
          :col-type :text
          :type string)
+   (incoming :initarg :incomingp
+             :col-type :boolean
+             :type boolean
+             :reader message-incoming-p)
    (raw :initarg :raw
         :col-type :jsonb
         :type hash-table

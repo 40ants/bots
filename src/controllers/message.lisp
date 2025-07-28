@@ -13,13 +13,22 @@
                 #:order-by
                 #:offset
                 #:limit)
+  (:import-from #:serapeum
+                #:->)
+  (:import-from #:40ants-bots/models/chat
+                #:chat)
+  (:import-from #:40ants-bots/models/user
+                #:user)
   (:export #:create-message
            #:get-message
            #:list-messages))
 (in-package #:40ants-bots/controllers/message)
 
 
-(defun create-message (platform platform-id chat user text &key raw)
+(-> create-message (keyword integer chat user string &key (:raw hash-table) (:incomingp boolean))
+    (values message &optional))
+
+(defun create-message (platform platform-id chat user text &key raw (incomingp nil))
   "Создает новое сообщение в базе данных."
   (mito:create-dao 'message
                    :platform platform
@@ -27,6 +36,7 @@
                    :chat chat
                    :user user
                    :text text
+                   :incomingp incomingp
                    :raw (or raw (make-hash-table))))
 
 (defun get-message (id)
