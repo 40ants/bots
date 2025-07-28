@@ -12,6 +12,7 @@
   :depends-on ("dbd-postgres"
                "mito"
                "40ants-bots/core"
+               "40ants-bots/pipeline"
                "40ants-bots/controller/chat"
                "40ants-bots/controller/message"
                "40ants-bots/controller/user")

@@ -17,13 +17,26 @@
                 #:order-by
                 #:offset
                 #:limit)
+  (:import-from #:40ants-bots/models/user
+                #:user)
+  (:import-from #:serapeum
+                #:->)
   (:export #:create-chat
            #:get-chat-by-id
            #:get-chat-by-platform-id
            #:list-chats
            #:get-or-create-chat
-           #:get-current-chat))
+           #:get-current-chat
+           #:get-private-chat))
 (in-package #:40ants-bots/controller/chat)
+
+
+(defmethod print-object ((obj chat) stream)
+  (print-unreadable-object (obj stream :type t)
+    (format stream "~A ~A (~A)"
+            (chat-platform obj)
+            (chat-platform-id obj)
+            (chat-type obj))))
 
 
 (defun create-chat (platform platform-id &key (type :chat) raw)
@@ -66,3 +79,12 @@
   (unless *current-chat*
     (error "Use GET-CURRENT-CHAT during message processing."))
   *current-chat*)
+
+
+(-> get-private-chat (user)
+    (values (or null chat)))
+
+(defun get-private-chat (user)
+  (mito:find-dao 'chat
+                 :platform (40ants-bots/models/user:user-platform user)
+                 :platform-id (40ants-bots/models/user:user-platform-id user)))

@@ -1,6 +1,9 @@
-(uiop:define-package #:40ant-bots/controller/user
+(uiop:define-package #:40ants-bots/controller/user
   (:use #:cl)
   (:import-from #:40ants-bots/models/user
+                #:user-platform
+                #:user-platform-id
+                #:user-username
                 #:user)
   (:import-from #:mito
                 #:create-dao
@@ -11,7 +14,15 @@
            #:create-user
            #:get-or-create-user
            #:get-current-user))
-(in-package #:40ant-bots/controller/user)
+(in-package #:40ants-bots/controller/user)
+
+
+(defmethod print-object ((obj user) stream)
+  (print-unreadable-object (obj stream :type t)
+    (format stream "~A ~A"
+            (user-platform obj)
+            (or (user-username obj)
+                (user-platform-id obj)))))
 
 
 (defun get-current-user ()

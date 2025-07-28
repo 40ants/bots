@@ -1,5 +1,6 @@
 (uiop:define-package #:40ants-bots/models/user
   (:use #:cl)
+  (:import-from #:mito)
   (:import-from #:40ants-bots/db/utils
                 #:hash-to-db
                 #:hash-from-db
@@ -21,7 +22,7 @@
              :deflate #'keyword-to-db)
    (platform-id :initarg :platform-id
                 :col-type :bigint
-                :type keyword)
+                :type integer)
    (username :initarg :username
              :col-type :text
              :type string)

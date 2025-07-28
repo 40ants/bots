@@ -1,4 +1,4 @@
-(uiop:define-package #:40ants-bot/pipeline
+(uiop:define-package #:40ants-bots/pipeline
   (:use #:cl)
   (:import-from #:cl-telegram-bot2/api)
   (:import-from #:cl-telegram-bot2/pipeline)
@@ -7,7 +7,7 @@
   (:import-from #:40ants-bots/vars
                 #:*current-user*
                 #:*current-chat*)
-  (:import-from #:40ant-bots/controller/user
+  (:import-from #:40ants-bots/controller/user
                 #:get-or-create-user)
   (:import-from #:40ants-bots/controller/chat
                 #:get-or-create-chat)
@@ -22,8 +22,10 @@
   (:import-from #:cl-telegram-bot2/generics
                 #:process)
   (:import-from #:cl-telegram-bot2/vars
-                #:*default-special-bindings*))
-(in-package #:40ants-bot/pipeline)
+                #:*default-special-bindings*)
+  (:import-from #:40ants-bots/db
+                #:with-connection))
+(in-package #:40ants-bots/pipeline)
 
 
 (defvar *updates* nil)
@@ -79,70 +81,64 @@
 
 
 (defmethod process :around ((bot bot) (state null) (update cl-telegram-bot2/api:update))
-  (40ants-bots/db:with-connection ()
-    (let* ((platform :telegram)
-           ;; Не все типы message могут быть привязаны к автору.
-           ;; У тех что отправлены в канал, from не заполнено.
-           (api-user (cl-telegram-bot2/pipeline::get-user update))
-           (user-platform-id (when api-user
-                               (cl-telegram-bot2/api:user-id api-user)))
-           (username (when api-user
-                       (cl-telegram-bot2/api:user-username api-user)))
-           (user-as-json (when api-user
-                           (cl-telegram-bot2/spec::unparse api-user)))
-           (user (when api-user
-                   (get-or-create-user platform
-                                       user-platform-id
-                                       username
-                                       user-as-json)))
-           (api-chat (cl-telegram-bot2/pipeline::get-chat update))
-           (chat-platform-id (cl-telegram-bot2/api:chat-id api-chat))
-           (chat-type (make-keyword (string-upcase
-                                     (or (cl-telegram-bot2/api::chat-type api-chat)
-                                         (error "No chat type")))))
-           (chat-as-json (cl-telegram-bot2/spec::unparse api-chat))
-           (chat (get-or-create-chat platform
-                                     chat-platform-id
-                                     :type chat-type
-                                     :raw chat-as-json))
-           ;; (update-platform-id (cl-telegram-bot2/api:update-update-id update))
-           ;; (update-as-json (cl-telegram-bot2/spec::unparse update))
-           (*current-user* user)
-           (*current-chat* chat)
-           (*default-special-bindings*
-             (list*
-              '(*current-user* . *current-user*)
-              '(*current-chat* . *current-chat*)
-              *default-special-bindings*)))
-      (flet ((save-message (message)
-               (let ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
-                     (message-as-json (cl-telegram-bot2/spec::unparse message)))
-                 (create-message platform
-                                 message-platform-id
-                                 chat
-                                 user
-                                 (or (get-text-from-message-if-possible message)
-                                     "No text")
-                                 :raw message-as-json)
-                 (values))))
+  (let* ((platform :telegram)
+         ;; Не все типы message могут быть привязаны к автору.
+         ;; У тех что отправлены в канал, from не заполнено.
+         (api-user (cl-telegram-bot2/pipeline::get-user update))
+         (user-platform-id (when api-user
+                             (cl-telegram-bot2/api:user-id api-user)))
+         (username (when api-user
+                     (cl-telegram-bot2/api:user-username api-user)))
+         (user-as-json (when api-user
+                         (cl-telegram-bot2/spec::unparse api-user)))
+         (user (when api-user
+                 (get-or-create-user platform
+                                     user-platform-id
+                                     username
+                                     user-as-json)))
+         (api-chat (cl-telegram-bot2/pipeline::get-chat update))
+         (chat-platform-id (cl-telegram-bot2/api:chat-id api-chat))
+         (chat-type (make-keyword (string-upcase
+                                   (or (cl-telegram-bot2/api::chat-type api-chat)
+                                       (error "No chat type")))))
+         (chat-as-json (cl-telegram-bot2/spec::unparse api-chat))
+         (chat (get-or-create-chat platform
+                                   chat-platform-id
+                                   :type chat-type
+                                   :raw chat-as-json))
+         ;; (update-platform-id (cl-telegram-bot2/api:update-update-id update))
+         ;; (update-as-json (cl-telegram-bot2/spec::unparse update))
+         (*current-user* user)
+         (*current-chat* chat)
+         (*default-special-bindings*
+           (list*
+            '(*current-user* . *current-user*)
+            '(*current-chat* . *current-chat*)
+            *default-special-bindings*)))
+    (flet ((save-message (message)
+             (let ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
+                   (message-as-json (cl-telegram-bot2/spec::unparse message)))
+               (create-message platform
+                               message-platform-id
+                               chat
+                               user
+                               (or (get-text-from-message-if-possible message)
+                                   "No text")
+                               :raw message-as-json)
+               (values))))
 
-        (save-message (get-message-from-update update))
-        ;; (create-message platform
-        ;;                 update-platform-id
-        ;;                 chat
-        ;;                 user
-        ;;                 (or (get-text-from-update-if-possible update)
-        ;;                     "No text")
-        ;;                 :raw update-as-json)
+      (let ((payload (get-message-from-update update)))
+        (when (typep payload 'cl-telegram-bot2/api:message)
+          (save-message payload)))
         
-        (push (list state update *current-user*)
-              *updates*)
+      (push (list state update *current-user*)
+            *updates*)
 
-        (multiple-value-bind (sent-messages result)
-            (collect-sent-messages
-              (call-next-method))
+      (multiple-value-bind (sent-messages result)
+          (collect-sent-messages
+            (call-next-method))
          
-          (loop for message in sent-messages
-                do (log:error "Sent message" message)
-                   (save-message message))
-          (values result))))))
+        (loop for message in sent-messages
+              do (log:error "Sent message" message)
+                 (save-message message))
+        (values result)))))

@@ -1,5 +1,6 @@
 (uiop:define-package #:40ants-bots/models/chat
   (:use #:cl)
+  (:import-from #:mito)
   (:import-from #:40ants-bots/db/utils
                 #:hash-to-db
                 #:hash-from-db
