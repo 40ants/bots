@@ -115,6 +115,7 @@
             '(*current-user* . *current-user*)
             '(*current-chat* . *current-chat*)
             *default-special-bindings*)))
+    
     (flet ((save-message (message &key incomingp)
              (let ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
                    (message-as-json (cl-telegram-bot2/spec::unparse message)))

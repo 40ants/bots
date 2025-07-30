@@ -25,7 +25,7 @@
 (in-package #:40ants-bots/controllers/message)
 
 
-(-> create-message (keyword integer chat user string &key (:raw hash-table) (:incomingp boolean))
+(-> create-message (keyword integer chat (or null user) string &key (:raw hash-table) (:incomingp boolean))
     (values message &optional))
 
 (defun create-message (platform platform-id chat user text &key raw (incomingp nil))

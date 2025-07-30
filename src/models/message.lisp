@@ -25,7 +25,7 @@
          :col-type chat
          :references (chat id))
    (user :initarg :user
-         :col-type user
+         :col-type (or :null user)
          :references (user id))
    (platform :initarg :platform
              :col-type :supported_platforms
