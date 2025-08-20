@@ -27,7 +27,8 @@
            #:list-chats
            #:get-or-create-chat
            #:get-current-chat
-           #:get-private-chat))
+           #:get-private-chat
+           #:get-chat-title))
 (in-package #:40ants-bots/controllers/chat)
 
 
@@ -88,3 +89,12 @@
   (mito:find-dao 'chat
                  :platform (40ants-bots/models/user:user-platform user)
                  :platform-id (40ants-bots/models/user:user-platform-id user)))
+
+
+(-> get-chat-title (chat)
+    (values (or null string)))
+
+
+(defun get-chat-title (chat)
+  (gethash "title"
+           (chat-raw chat)))
