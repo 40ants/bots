@@ -20,6 +20,7 @@
   (:import-from #:40ants-bots/models/user
                 #:user)
   (:import-from #:serapeum
+                #:soft-list-of
                 #:->)
   (:export #:create-chat
            #:get-chat-by-id
@@ -98,3 +99,10 @@
 (defun get-chat-title (chat)
   (gethash "title"
            (chat-raw chat)))
+
+
+(-> get-all-chats ()
+    (soft-list-of chat))
+
+(defun get-all-chats ()
+  (nth-value 0 (mito:select-dao 'chat)))

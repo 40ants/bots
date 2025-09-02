@@ -5,6 +5,7 @@
   (:import-from #:40ants-bots/bot
                 #:bot)
   (:import-from #:40ants-bots/vars
+                #:*current-bot*
                 #:*current-user*
                 #:*current-chat*)
   (:import-from #:40ants-bots/controllers/user
@@ -110,10 +111,12 @@
          ;; (update-as-json (cl-telegram-bot2/spec::unparse update))
          (*current-user* user)
          (*current-chat* chat)
+         (*current-bot* bot)
          (*default-special-bindings*
            (list*
             '(*current-user* . *current-user*)
             '(*current-chat* . *current-chat*)
+            '(*current-bot* . *current-bot*)
             *default-special-bindings*)))
     
     (flet ((save-message (message &key incomingp)
