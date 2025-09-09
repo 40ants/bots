@@ -145,7 +145,7 @@
             (call-next-method))
 
         (loop for message in sent-messages
-              do (log:error "Sent message" message)
+              do (log:info "Sent message" message)
                  (save-message message
                                :incomingp nil))
         (values result)))))
