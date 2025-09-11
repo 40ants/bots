@@ -23,9 +23,7 @@
   (:import-from #:cl-telegram-bot2/generics
                 #:process-update)
   (:import-from #:cl-telegram-bot2/vars
-                #:*default-special-bindings*)
-  (:import-from #:40ants-bots/db
-                #:with-connection))
+                #:*default-special-bindings*))
 (in-package #:40ants-bots/pipeline)
 
 
