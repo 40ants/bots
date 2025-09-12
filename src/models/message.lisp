@@ -20,6 +20,12 @@
 (in-package #:40ants-bots/models/message)
 
 
+;; Attempt to silent docs-builder by declaring generic functions for
+;; model slot accessors
+
+(defgeneric message-chat (obj))
+
+
 (mito:deftable message ()
   ((chat :initarg :chat
          :col-type chat
