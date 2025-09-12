@@ -16,7 +16,7 @@
            #:message-text
            #:message-raw
            #:message-created-at
-           #:message-incoming-p))
+           #:message-incoming))
 (in-package #:40ants-bots/models/message)
 
 
@@ -39,8 +39,7 @@
          :type string)
    (incoming :initarg :incomingp
              :col-type :boolean
-             :type boolean
-             :reader message-incoming-p)
+             :type boolean)
    (raw :initarg :raw
         :col-type :jsonb
         :type hash-table
