@@ -10,12 +10,12 @@
                 #:user)
   (:import-from #:40ants-bots/models/chat
                 #:chat)
+  (:import-from #:serapeum
+                #:eval-always)
   (:export #:message
-           #:message-id
            #:message-user
            #:message-text
            #:message-raw
-           #:message-created-at
            #:message-incoming
            #:message-chat
            #:message-chat-id
@@ -23,12 +23,6 @@
            #:message-platform
            #:message-platform-id))
 (in-package #:40ants-bots/models/message)
-
-
-;; Attempt to silent docs-builder by declaring generic functions for
-;; model slot accessors
-
-(defgeneric message-chat (obj))
 
 
 (mito:deftable message ()
@@ -57,3 +51,17 @@
         :inflate #'hash-from-db
         :deflate #'hash-to-db))
   (:table-name "bots.messages"))
+
+
+(defun set-methods-sources (class-name)
+  "Обновляет source для всех методов класса у которых source не задан."
+  (loop with class = (find-class class-name)
+        for method in (closer-mop:specializer-direct-generic-functions class)
+        for method-source = (slot-value method 'sb-pcl::source)
+        unless method-source
+          do (setf (slot-value method 'sb-pcl::source)
+                   (slot-value class 'sb-pcl::source))))
+
+
+(eval-always
+  (set-methods-sources 'message))

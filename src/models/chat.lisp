@@ -7,13 +7,10 @@
                 #:keyword-from-db
                 #:keyword-to-db)
   (:export #:chat
-           #:chat-id
            #:chat-platform
            #:chat-platform-id
            #:chat-type
-           #:chat-raw
-           #:chat-created-at
-           #:chat-updated-at))
+           #:chat-raw))
 (in-package #:40ants-bots/models/chat)
 
 
