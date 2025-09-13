@@ -10,8 +10,8 @@
                 #:user)
   (:import-from #:40ants-bots/models/chat
                 #:chat)
-  (:import-from #:serapeum
-                #:eval-always)
+  ;; (:import-from #:serapeum
+  ;;               #:eval-always)
   (:export #:message
            #:message-user
            #:message-text
