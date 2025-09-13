@@ -16,7 +16,12 @@
            #:message-text
            #:message-raw
            #:message-created-at
-           #:message-incoming))
+           #:message-incoming
+           #:message-chat
+           #:message-chat-id
+           #:message-user-id
+           #:message-platform
+           #:message-platform-id))
 (in-package #:40ants-bots/models/message)
 
 
