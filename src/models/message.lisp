@@ -10,17 +10,24 @@
                 #:user)
   (:import-from #:40ants-bots/models/chat
                 #:chat)
+  (:import-from #:serapeum
+                #:eval-always)
+  (:import-from #:40ants-doc/mito
+                #:fixed-dao-table-class)
   (:export #:message
-           #:message-id
            #:message-user
            #:message-text
            #:message-raw
-           #:message-created-at
-           #:message-incoming-p))
+           #:message-incoming
+           #:message-chat
+           #:message-chat-id
+           #:message-user-id
+           #:message-platform
+           #:message-platform-id))
 (in-package #:40ants-bots/models/message)
 
 
-(mito:deftable message ()
+(defclass message ()
   ((chat :initarg :chat
          :col-type chat
          :references (chat id))
@@ -39,11 +46,12 @@
          :type string)
    (incoming :initarg :incomingp
              :col-type :boolean
-             :type boolean
-             :reader message-incoming-p)
+             :type boolean)
    (raw :initarg :raw
         :col-type :jsonb
         :type hash-table
         :inflate #'hash-from-db
         :deflate #'hash-to-db))
+  (:metaclass fixed-dao-table-class)
+  (:conc-name message-)
   (:table-name "bots.messages"))
