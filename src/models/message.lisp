@@ -56,7 +56,7 @@
 (eval-always
   (defun set-methods-sources (class-name)
     "Обновляет source для всех методов класса у которых source не задан."
-    (let ((class (find-class class-name)))
+    (let ((class (find-class class-name nil)))
       (when class
         (loop for method in (closer-mop:specializer-direct-generic-functions class)
               for method-source = (slot-value method 'sb-pcl::source)
