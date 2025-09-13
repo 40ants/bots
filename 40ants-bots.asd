@@ -11,6 +11,8 @@
   :pathname "src"
   :depends-on ("dbd-postgres"
                "mito"
+               ;; To fix relation readers of table classes:
+               "40ants-doc/mito"
                "40ants-bots/core"
                "40ants-bots/pipeline"
                "40ants-bots/controllers/chat"

@@ -12,6 +12,8 @@
                 #:chat)
   (:import-from #:serapeum
                 #:eval-always)
+  (:import-from #:40ants-doc/mito
+                #:fixed-dao-table-class)
   (:export #:message
            #:message-user
            #:message-text
@@ -25,7 +27,7 @@
 (in-package #:40ants-bots/models/message)
 
 
-(mito:deftable message ()
+(defclass message ()
   ((chat :initarg :chat
          :col-type chat
          :references (chat id))
@@ -50,24 +52,6 @@
         :type hash-table
         :inflate #'hash-from-db
         :deflate #'hash-to-db))
+  (:metaclass fixed-dao-table-class)
+  (:conc-name message-)
   (:table-name "bots.messages"))
-
-
-(eval-always
-  (defun set-methods-sources (class-name)
-    "Обновляет source для всех методов класса у которых source не задан."
-    (let ((class (find-class class-name nil)))
-      (flet ((specializes-on-our-class (method)
-               (loop for specializer in (closer-mop:method-specializers method)
-                     thereis (and (typep specializer 'class)
-                                  (eql (class-name specializer) class-name)))))
-        (when class
-          (loop for gf in (closer-mop:specializer-direct-generic-functions class)
-                do (loop for method in (closer-mop:generic-function-methods gf)
-                         for method-source = (slot-value method 'sb-pcl::source)
-                         when (and (null method-source)
-                                   (specializes-on-our-class method))
-                           do (setf (slot-value method 'sb-pcl::source)
-                                    (slot-value class 'sb-pcl::source))))))))
-  
-  (set-methods-sources 'message))
