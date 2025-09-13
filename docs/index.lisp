@@ -42,6 +42,7 @@
                     :ignore-words ("JSON"
                                    "HTTP"
                                    "TODO"
+                                   "DSL"
                                    "Unlicense"
                                    "REPL"
                                    "ASDF:PACKAGE-INFERRED-SYSTEM"

@@ -10,13 +10,18 @@
                 #:user)
   (:import-from #:40ants-bots/models/chat
                 #:chat)
+  (:import-from #:serapeum
+                #:eval-always)
   (:export #:message
-           #:message-id
            #:message-user
            #:message-text
            #:message-raw
-           #:message-created-at
-           #:message-incoming-p))
+           #:message-incoming
+           #:message-chat
+           #:message-chat-id
+           #:message-user-id
+           #:message-platform
+           #:message-platform-id))
 (in-package #:40ants-bots/models/message)
 
 
@@ -39,11 +44,30 @@
          :type string)
    (incoming :initarg :incomingp
              :col-type :boolean
-             :type boolean
-             :reader message-incoming-p)
+             :type boolean)
    (raw :initarg :raw
         :col-type :jsonb
         :type hash-table
         :inflate #'hash-from-db
         :deflate #'hash-to-db))
   (:table-name "bots.messages"))
+
+
+(eval-always
+  (defun set-methods-sources (class-name)
+    "Обновляет source для всех методов класса у которых source не задан."
+    (let ((class (find-class class-name nil)))
+      (flet ((specializes-on-our-class (method)
+               (loop for specializer in (closer-mop:method-specializers method)
+                     thereis (and (typep specializer 'class)
+                                  (eql (class-name specializer) class-name)))))
+        (when class
+          (loop for gf in (closer-mop:specializer-direct-generic-functions class)
+                do (loop for method in (closer-mop:generic-function-methods gf)
+                         for method-source = (slot-value method 'sb-pcl::source)
+                         when (and (null method-source)
+                                   (specializes-on-our-class method))
+                           do (setf (slot-value method 'sb-pcl::source)
+                                    (slot-value class 'sb-pcl::source))))))))
+  
+  (set-methods-sources 'message))
