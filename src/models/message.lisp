@@ -53,15 +53,14 @@
   (:table-name "bots.messages"))
 
 
-(defun set-methods-sources (class-name)
-  "Обновляет source для всех методов класса у которых source не задан."
-  (loop with class = (find-class class-name)
-        for method in (closer-mop:specializer-direct-generic-functions class)
-        for method-source = (slot-value method 'sb-pcl::source)
-        unless method-source
-          do (setf (slot-value method 'sb-pcl::source)
-                   (slot-value class 'sb-pcl::source))))
-
-
 (eval-always
+  (defun set-methods-sources (class-name)
+    "Обновляет source для всех методов класса у которых source не задан."
+    (loop with class = (find-class class-name)
+          for method in (closer-mop:specializer-direct-generic-functions class)
+          for method-source = (slot-value method 'sb-pcl::source)
+          unless method-source
+            do (setf (slot-value method 'sb-pcl::source)
+                     (slot-value class 'sb-pcl::source))))
+  
   (set-methods-sources 'message))
