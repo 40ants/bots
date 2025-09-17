@@ -17,5 +17,7 @@
                "40ants-bots/pipeline"
                "40ants-bots/controllers/chat"
                "40ants-bots/controllers/message"
-               "40ants-bots/controllers/user")
+               "40ants-bots/controllers/user"
+               "40ants-bots/telegram/feedback"
+               "40ants-bots/telegram/payment")
   :in-order-to ((test-op (test-op "40ants-bots-tests"))))
