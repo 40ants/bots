@@ -18,14 +18,17 @@
   :jobs ((40ants-ci/jobs/linter:linter
           :asdf-systems ("40ants-bots"
                          "40ants-bots-docs"
-                         "40ants-bots-tests"))))
+                         "40ants-bots-tests")
+          :dynamic-space-size "4G")))
 
 (defworkflow docs
   :on-push-to "master"
   :by-cron "0 10 * * 1"
   :on-pull-request t
   :cache t
-  :jobs ((build-docs :asdf-system "40ants-bots-docs")))
+  :jobs ((build-docs
+          :asdf-system "40ants-bots-docs"
+          :dynamic-space-size "4G")))
 
 
 (defworkflow ci
@@ -37,4 +40,5 @@
           :asdf-system "40ants-bots"
           :lisp ("sbcl-bin"
                  "ccl-bin")
+          :dynamic-space-size "4G"
           :coverage t)))
