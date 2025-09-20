@@ -1,4 +1,4 @@
-(uiop:define-package #:40ants/controllers/feedback
+(uiop:define-package #:40ants-bots/controllers/feedback
   (:use #:cl)
   (:import-from #:serapeum
                 #:->)
@@ -7,7 +7,7 @@
   (:import-from #:mito
                 #:create-dao)
   (:export #:register-feedback-message))
-(in-package #:40ants/controllers/feedback)
+(in-package #:40ants-bots/controllers/feedback)
 
 
 (-> register-feedback-message (integer)

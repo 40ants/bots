@@ -27,7 +27,7 @@
                 #:ask-for-text)
   (:import-from #:cl-telegram-bot2/states/base
                 #:var)
-  (:import-from #:40ants/controllers/feedback
+  (:import-from #:40ants-bots/controllers/feedback
                 #:register-feedback-message)
   (:export #:request-feedback))
 (in-package #:40ants-bots/telegram/feedback)
