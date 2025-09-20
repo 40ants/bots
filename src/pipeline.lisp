@@ -23,7 +23,9 @@
   (:import-from #:cl-telegram-bot2/generics
                 #:process-update)
   (:import-from #:cl-telegram-bot2/vars
-                #:*default-special-bindings*))
+                #:*default-special-bindings*)
+  (:import-from #:cl-telegram-bot2/states/base
+                #:var))
 (in-package #:40ants-bots/pipeline)
 
 
@@ -118,16 +120,19 @@
             *default-special-bindings*)))
     
     (flet ((save-message (message &key incomingp)
-             (let ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
-                   (message-as-json (cl-telegram-bot2/spec::unparse message)))
-               (create-message platform
-                               message-platform-id
-                               chat
-                               user
-                               (or (get-text-from-message-if-possible message)
-                                   "No text")
-                               :incomingp incomingp
-                               :raw message-as-json)
+             (let* ((message-platform-id (cl-telegram-bot2/api:message-message-id message))
+                    (message-as-json (cl-telegram-bot2/spec::unparse message))
+                    (message (create-message platform
+                                             message-platform-id
+                                             chat
+                                             user
+                                             (or (get-text-from-message-if-possible message)
+                                                 "No text")
+                                             :incomingp incomingp
+                                             :raw message-as-json))
+                    (message-id (mito:object-id message)))
+               (setf (var "40bots:last-incoming-message-id")
+                     message-id)
                (values))))
 
       (let ((payload (get-message-from-update update)))
