@@ -19,7 +19,7 @@
           :asdf-systems ("40ants-bots"
                          "40ants-bots-docs"
                          "40ants-bots-tests")
-          :dynamic-space-size "4g")))
+          :dynamic-space-size "4Gb")))
 
 (defworkflow docs
   :on-push-to "master"
@@ -28,7 +28,7 @@
   :cache t
   :jobs ((build-docs
           :asdf-system "40ants-bots-docs"
-          :dynamic-space-size "4g")))
+          :dynamic-space-size "4Gb")))
 
 
 (defworkflow ci
@@ -40,5 +40,5 @@
           :asdf-system "40ants-bots"
           :lisp ("sbcl-bin"
                  "ccl-bin")
-          :dynamic-space-size "4g"
+          :dynamic-space-size "4Gb"
           :coverage t)))
