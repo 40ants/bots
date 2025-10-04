@@ -31,7 +31,7 @@
           "uses": "40ants/setup-lisp@v4",
           "with": {
             "asdf-system": "40ants-bots-docs",
-            "dynamic-space-size": "4G",
+            "dynamic-space-size": "4g",
             "cache": "true"
           }
         },
