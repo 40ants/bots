@@ -10,6 +10,8 @@
                               "REPL"
                               "HTTP")
                :external-docs ("https://40ants.com/40ants-pg/"))
+  (0.4.0 2025-10-05
+         "* Added 40ANTS-BOTS/CONTROLLERS/CHAT:GET-CHAT-URL function.")
   (0.3.0 2025-09-17
          "* Added 40ANTS-BOTS/TELEGRAM/FEEDBACK:REQUEST-FEEDBACK function which request for feedback and saves a it to the bots.feedbacks table.")
   (0.2.0 2025-09-11

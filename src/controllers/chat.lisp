@@ -20,6 +20,7 @@
   (:import-from #:40ants-bots/models/user
                 #:user)
   (:import-from #:serapeum
+                #:fmt
                 #:soft-list-of
                 #:->)
   (:export #:create-chat
@@ -29,7 +30,8 @@
            #:get-or-create-chat
            #:get-current-chat
            #:get-private-chat
-           #:get-chat-title))
+           #:get-chat-title
+           #:get-chat-url))
 (in-package #:40ants-bots/controllers/chat)
 
 
@@ -93,12 +95,25 @@
 
 
 (-> get-chat-title (chat)
-    (values (or null string)))
+    (values (or null string) &optional))
 
 
 (defun get-chat-title (chat)
-  (gethash "title"
-           (chat-raw chat)))
+  (values
+   (gethash "title"
+            (chat-raw chat))))
+
+
+(-> get-chat-url (chat)
+    (values (or null string) &optional))
+
+
+(defun get-chat-url (chat)
+  "Returns URL for public chat."
+  (let ((username (gethash "username"
+                           (chat-raw chat))))
+    (when username
+      (fmt "https://t.me/~A" username))))
 
 
 (-> get-all-chats ()
