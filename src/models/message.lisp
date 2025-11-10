@@ -23,7 +23,9 @@
            #:message-chat-id
            #:message-user-id
            #:message-platform
-           #:message-platform-id))
+           #:message-platform-id
+           #:message-version
+           #:message-is-actual))
 (in-package #:40ants-bots/models/message)
 
 
@@ -41,6 +43,13 @@
              :deflate #'keyword-to-db)
    (platform-id :initarg :platform-id
                 :col-type :bigint)
+   (version :initarg :version
+            :col-type :bigint
+            :type integer)
+   (is-actual :initarg :is-actual
+              :col-type :boolean
+              :initform t
+              :type boolean)
    (text :initarg :text
          :col-type :text
          :type string)
