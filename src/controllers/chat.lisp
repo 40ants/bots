@@ -9,8 +9,6 @@
                 #:chat-raw
                 #:chat-created-at
                 #:chat-updated-at)
-  (:import-from #:40ants-bots/db/utils
-                #:with-transaction)
   (:import-from #:40ants-bots/vars
                 #:*current-chat*)
   (:import-from #:sxql

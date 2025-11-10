@@ -10,6 +10,8 @@
                               "REPL"
                               "HTTP")
                :external-docs ("https://40ants.com/40ants-pg/"))
+  (0.5.0 2025-11-11
+         "* Now records in bots.messages table are versioned.")
   (0.4.0 2025-10-05
          "* Added 40ANTS-BOTS/CONTROLLERS/CHAT:GET-CHAT-URL function.")
   (0.3.0 2025-09-17

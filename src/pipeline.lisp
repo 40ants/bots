@@ -29,8 +29,6 @@
 (in-package #:40ants-bots/pipeline)
 
 
-(defvar *updates* nil)
-
 (-> get-text-from-update-if-possible (cl-telegram-bot2/api:update)
     (values (or null string)
             &optional))
@@ -140,9 +138,6 @@
           (save-message payload
                         :incomingp t)))
         
-      (push (list update *current-user*)
-            *updates*)
-
       (multiple-value-bind (sent-messages result)
           (collect-sent-messages
             (call-next-method))

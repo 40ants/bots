@@ -9,8 +9,6 @@
                 #:payment-text
                 #:payment-raw
                 #:payment-created-at)
-  (:import-from #:40ants-bots/db/utils
-                #:with-transaction)
   (:import-from #:sxql
                 #:order-by
                 #:offset
