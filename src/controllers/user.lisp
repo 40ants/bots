@@ -48,3 +48,9 @@
 (defun get-or-create-user (platform platform-id username raw)
   (or (get-user platform platform-id)
       (create-user platform platform-id username raw)))
+
+
+(defun get-latest-users (&key (limit 10))
+  (mito:select-dao 'user
+    (order-by (:desc :created-at))
+    (limit limit)))
