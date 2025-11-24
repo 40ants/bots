@@ -10,6 +10,9 @@
                 #:find-dao)
   (:import-from #:40ants-bots/vars
                 #:*current-user*)
+  (:import-from #:sxql
+                #:order-by
+                #:limit)
   (:export #:get-user
            #:create-user
            #:get-or-create-user
