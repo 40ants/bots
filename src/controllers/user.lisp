@@ -6,6 +6,9 @@
                 #:user-username
                 #:user)
   (:import-from #:mito
+                #:object-id
+                #:retrieve-by-sql
+                #:select-dao
                 #:create-dao
                 #:find-dao)
   (:import-from #:40ants-bots/vars
@@ -13,10 +16,14 @@
   (:import-from #:sxql
                 #:order-by
                 #:limit)
+  (:import-from #:local-time
+                #:universal-to-timestamp)
   (:export #:get-user
            #:create-user
            #:get-or-create-user
-           #:get-current-user))
+           #:get-current-user
+           #:get-num-messages
+           #:get-latest-message))
 (in-package #:40ants-bots/controllers/user)
 
 
@@ -40,6 +47,11 @@
             :platform-id platform-id))
 
 
+(defun get-user-by-id (user-id)
+  (find-dao 'user
+            :id user-id))
+
+
 (defun create-user (platform platform-id username raw)
   (create-dao 'user
               :platform platform
@@ -54,6 +66,36 @@
 
 
 (defun get-latest-users (&key (limit 10))
-  (mito:select-dao 'user
+  (select-dao 'user
     (order-by (:desc :created-at))
     (limit limit)))
+
+
+(defun get-num-messages (user)
+  (getf
+   (first
+    (retrieve-by-sql "select count(*) as count from bots.messages where user_id = ?"
+                     :binds (list (object-id user))))
+   :count))
+
+
+(defun get-latest-message (user)
+  (let* ((data (retrieve-by-sql "select platform, raw, incoming, created_at from bots.messages where user_id = ? order by created_at desc limit 1"
+                                :binds (list (object-id user))))
+         (row (first data)))
+    (when row
+      (let* ((raw (getf row :raw))
+             (json (yason:parse raw))
+             (platform (getf row :platform))
+             (incoming (getf row :incoming))
+             (created-at (getf row :created-at)))
+        
+        (unless (string-equal platform "telegram")
+          (error "Platform ~S is not supported"
+                 platform))
+
+        (values (or (gethash "caption" json)
+                    (gethash "text" json)
+                    "No \"caption\" or \"text\" attribute in raw.")
+                incoming
+                (universal-to-timestamp created-at))))))
