@@ -23,6 +23,8 @@
                 #:format-date)
   (:import-from #:mito
                 #:object-created-at)
+  (:import-from #:40ants-routes/route-url
+                #:route-url)
   (:export #:make-user-page))
 (in-package #:40ants-bots/admin/pages/user)
 
@@ -63,13 +65,15 @@
                       "")))
             (:tr
              (:td "Latest message")
-             (:td (if latest-message
-                      (concatenate 'string
-                                   (if incoming
-                                       "⬇ "
-                                       "⬆ ")
-                                   (str:shorten 50 latest-message))
-                      "")))))))
+             (:td (:a :href (route-url "user-messages"
+                                       :user-id (user-id widget))
+                      (if latest-message
+                          (concatenate 'string
+                                       (if incoming
+                                           "⬇ "
+                                           "⬆ ")
+                                       (str:shorten 50 latest-message))
+                          "No messages"))))))))
 
       (t
        (reblocks/response:not-found-error (fmt "User with id ~A not found"

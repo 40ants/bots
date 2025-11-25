@@ -14,16 +14,20 @@
   (:import-from #:40ants-bots/vars
                 #:*current-user*)
   (:import-from #:sxql
+                #:where
                 #:order-by
                 #:limit)
   (:import-from #:local-time
                 #:universal-to-timestamp)
+  (:import-from #:40ants-bots/models/message
+                #:message)
   (:export #:get-user
            #:create-user
            #:get-or-create-user
            #:get-current-user
            #:get-num-messages
-           #:get-latest-message))
+           #:get-latest-message
+           #:get-user-messages))
 (in-package #:40ants-bots/controllers/user)
 
 
@@ -99,3 +103,11 @@
                     "No \"caption\" or \"text\" attribute in raw.")
                 incoming
                 (universal-to-timestamp created-at))))))
+
+
+
+(defun get-user-messages (user-id &key (limit 10))
+  (mito:select-dao 'message
+    (where (:= :user_id user-id))
+    (order-by (:desc :created_at))
+    (limit limit)))

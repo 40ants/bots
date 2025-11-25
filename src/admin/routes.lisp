@@ -8,11 +8,15 @@
                 #:make-dashboard-page)
   (:import-from #:40ants-bots/admin/pages/user
                 #:make-user-page)
+  (:import-from #:40ants-bots/admin/pages/user-messages
+                #:make-user-messages-page)
   (:export #:*routes*))
 (in-package #:40ants-bots/admin/routes)
 
 
 (defroutes (*routes* :namespace "40ants-bots")
+  (page ("/user/<int:user-id>/messages" :name "user-messages" :title "User Messages")
+    (make-user-messages-page user-id))
   (page ("/user/<int:user-id>" :name "user" :title "User")
     (make-user-page user-id))
   (page ("/" :name "index" :title "Dashboard")
