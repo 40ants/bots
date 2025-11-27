@@ -31,6 +31,10 @@
   (:import-from #:40ants-bots/models/message
                 #:message-raw
                 #:message-incoming)
+  (:import-from #:40ants-bots/admin/widgets/send-message-form
+                #:send-message-form)
+  (:import-from #:40ants-bots/controllers/chat
+                #:get-private-chat)
   (:export #:make-user-messages-page))
 (in-package #:40ants-bots/admin/pages/user-messages)
 
@@ -74,10 +78,16 @@
 
 
 (defmethod render ((widget user-messages-page) (theme tailwind-theme))
-  (let* ((messages (get-user-messages (user-id widget))))
+  (let* ((messages (get-user-messages (user-id widget)))
+         (user (get-user-by-id (user-id widget)))
+         (chat (get-private-chat user)))
     (with-html ()
       (:div :class "flex flex-col gap-8"
-            (loop for message in (reverse messages)
-                  do (render (make-message-widget message)
-                             theme))))))
+            (:div :class "flex flex-col gap-4"
+                  (loop for message in (reverse messages)
+                        do (render (make-message-widget message)
+                                   theme)))
+            (:div :class "flex flex-col gap-4"
+                  (render (send-message-form user chat)
+                          theme))))))
 

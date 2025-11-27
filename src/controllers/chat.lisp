@@ -83,13 +83,24 @@
   *current-chat*)
 
 
-(-> get-private-chat (user)
-    (values (or null chat)))
+(-> get-private-chat ((or integer user))
+    (values (or null chat)
+            &optional))
 
 (defun get-private-chat (user)
-  (mito:find-dao 'chat
-                 :platform (40ants-bots/models/user:user-platform user)
-                 :platform-id (40ants-bots/models/user:user-platform-id user)))
+  (etypecase user
+    (integer
+     (first
+      (mito:select-by-sql 'chat
+                          "select ch.*
+from bots.chats as ch
+join bots.users as u on u.platform = ch.platform and u.platform_id = ch.platform_id
+where u.id = ?"
+                          :binds (list user))))
+    (user
+     (mito:find-dao 'chat
+                    :platform (40ants-bots/models/user:user-platform user)
+                    :platform-id (40ants-bots/models/user:user-platform-id user)))))
 
 
 (-> get-chat-title (chat)
@@ -119,3 +130,4 @@
 
 (defun get-all-chats ()
   (nth-value 0 (mito:select-dao 'chat)))
+

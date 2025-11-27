@@ -129,8 +129,9 @@
                                              :incomingp incomingp
                                              :raw message-as-json))
                     (message-id (mito:object-id message)))
-               (setf (var "40bots:last-incoming-message-id")
-                     message-id)
+               (when incomingp
+                 (setf (var "40bots:last-incoming-message-id")
+                       message-id))
                (values))))
 
       (let ((payload (get-message-from-update update)))
