@@ -1,11 +1,6 @@
 (uiop:define-package #:40ants-bots/models/feedback
   (:use #:cl)
   (:import-from #:mito)
-  (:import-from #:40ants-bots/db/utils
-                #:hash-to-db
-                #:hash-from-db
-                #:keyword-from-db
-                #:keyword-to-db)
   (:import-from #:40ants-bots/models/message
                 #:message)
   (:export #:feedback

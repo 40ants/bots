@@ -9,10 +9,6 @@
                 #:payment-text
                 #:payment-raw
                 #:payment-created-at)
-  (:import-from #:sxql
-                #:order-by
-                #:offset
-                #:limit)
   (:import-from #:serapeum
                 #:->)
   (:import-from #:40ants-bots/models/chat

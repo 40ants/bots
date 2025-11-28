@@ -12,15 +12,9 @@
   (:import-from #:cl-telegram-bot2/actions/send-invoice)
   (:import-from #:40ants-bots/controllers/chat
                 #:get-current-chat)
-  (:import-from #:40ants-bots/controllers/user
-                #:get-current-user)
   (:import-from #:cl-telegram-bot2/state-with-commands
                 #:command)
-  (:import-from #:alexandria
-                #:length=)
   (:import-from #:log)
-  (:import-from #:40ants-bots/controllers/bot
-                #:get-current-bot)
   (:import-from #:cl-telegram-bot2/state
                 #:state)
   (:import-from #:cl-telegram-bot2/states/ask-for-text

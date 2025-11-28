@@ -1,6 +1,5 @@
 (uiop:define-package #:40ants-bots/models/message
   (:use #:cl)
-  (:import-from #:mito)
   (:import-from #:40ants-bots/db/utils
                 #:hash-to-db
                 #:hash-from-db
@@ -10,8 +9,6 @@
                 #:user)
   (:import-from #:40ants-bots/models/chat
                 #:chat)
-  (:import-from #:serapeum
-                #:eval-always)
   (:import-from #:40ants-doc/mito
                 #:fixed-dao-table-class)
   (:export #:message
