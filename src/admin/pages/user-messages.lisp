@@ -35,6 +35,8 @@
                 #:send-message-form)
   (:import-from #:40ants-bots/controllers/chat
                 #:get-private-chat)
+  (:import-from #:reblocks-ui2/themes/styling
+                #:css-classes)
   (:export #:make-user-messages-page))
 (in-package #:40ants-bots/admin/pages/user-messages)
 
@@ -74,7 +76,8 @@
                       (fmt "⬇ ~A" (format-date (object-created-at message)))
                       (fmt "⬆ ~A" (format-date (object-created-at message)))))
              (:div
-              (:pre (get-message-text (message widget)))))))))
+              (:pre (get-message-text (message widget)))))
+           :css-classes "w-full"))))
 
 
 (defmethod render ((widget user-messages-page) (theme tailwind-theme))
