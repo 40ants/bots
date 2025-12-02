@@ -77,7 +77,10 @@
                       (fmt "⬆ ~A" (format-date (object-created-at message)))))
              (:div
               (:pre (get-message-text (message widget)))))
-           :css-classes "w-full"))))
+           :css-classes "w-full")
+     ;; :vertical-align :top
+     ;; :height '(40)
+     )))
 
 
 (defmethod render ((widget user-messages-page) (theme tailwind-theme))
@@ -91,6 +94,7 @@
                         do (render (make-message-widget message)
                                    theme)))
             (:div :class "flex flex-col gap-4"
-                  (render (send-message-form user chat)
+                  (render (card
+                           (send-message-form user chat))
                           theme))))))
 

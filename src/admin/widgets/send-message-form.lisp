@@ -56,6 +56,8 @@
                 #:get-text-from-message-if-possible)
   (:import-from #:40ants-bots/api
                 #:send-message)
+  (:import-from #:reblocks-ui2/containers/row
+                #:row)
   (:export
    #:send-message-form))
 (in-package #:40ants-bots/admin/widgets/send-message-form)
@@ -120,8 +122,12 @@
      (column
       (html ((:h2 :class "text-2xl"
                   "Ответить")))
-      (textarea :name "text")
-      (button "Отправить"
-              :view :action))
+      (row
+       (textarea :name "text"
+                 :size :l)
+       (button "Отправить"
+               :view :action))
+      ;; :css-classes "!items-begin"
+      )
      :on-submit #'on-submit)))
 
