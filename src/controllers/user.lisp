@@ -60,7 +60,10 @@
   (create-dao 'user
               :platform platform
               :platform-id platform-id
-              :username username
+              ;; Telegram users created by phone number
+              ;; do not have a username.
+              :username (or username
+                            "")
               :raw raw))
 
 
