@@ -12,6 +12,8 @@
                 #:get-private-chat)
   (:import-from #:40ants-bots/models/chat
                 #:chat-platform-id)
+  (:import-from #:log4cl-extras/error
+                #:with-log-unhandled)
   (:export
    #:send-message))
 (in-package #:40ants-bots/api)
@@ -33,10 +35,11 @@
                       (chat-or-user text &rest rest)
   (let* ((chat-id (%get-chat-id-from chat-or-user))
          (message (handler-case
-                      (apply #'cl-telegram-bot2/api:send-message
-                             chat-id
-                             text
-                             rest)
+                      (with-log-unhandled ()
+                        (apply #'cl-telegram-bot2/api:send-message
+                               chat-id
+                               text
+                               rest))
                     (telegram-error (err)
                       ;; Process
                       ;; Forbidden: bot was blocked by the user
