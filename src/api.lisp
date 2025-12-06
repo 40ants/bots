@@ -38,11 +38,15 @@
                              text
                              rest)
                     (telegram-error (err)
+                      ;; Process
+                      ;; Forbidden: bot was blocked by the user
+                      
                       (when (string= (error-description err)
                                      "Bad Request: need administrator rights in the channel chat")
                         (log:warn "Unable to reply to chat ~S because bot needs administration rights on this channel"
                                   chat-id)
                         (return-from send-message nil))))))
-    (when (boundp '*collected-messages*)
+    (when (and (boundp '*collected-messages*)
+               message)
       (push message *collected-messages*))
     (values message)))
