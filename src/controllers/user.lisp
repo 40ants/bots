@@ -110,8 +110,14 @@
 
 
 (defun get-user-messages (user-id &key (limit 10))
+  "Returns messages sent by user to any chats.
+
+   Previously used in admin interface, but was replaced with a function get-chat-messages
+   to extract all messages (not only from the user), sent to the chat of the bot with user."
   (mito:select-dao 'message
     (where (:= :user_id user-id))
     (order-by (:desc :created_at))
     (limit limit)))
+
+
 

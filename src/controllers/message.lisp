@@ -8,6 +8,7 @@
                 #:message-raw
                 #:message-created-at)
   (:import-from #:sxql
+                #:where
                 #:order-by
                 #:offset
                 #:limit)
@@ -19,9 +20,12 @@
                 #:user)
   (:import-from #:40ants-pg/transactions
                 #:with-transaction)
+  (:import-from #:mito
+                #:object-id)
   (:export #:create-message
            #:get-message
-           #:list-messages))
+           #:list-messages
+           #:get-chat-messages))
 (in-package #:40ants-bots/controllers/message)
 
 
@@ -73,3 +77,14 @@ from updated_records
     (limit limit)
     (offset offset)
     (order-by (:desc :created-at))))
+
+
+(defun get-chat-messages (chat &key (limit 10))
+  "Returns messages sent by user to any chats.
+
+   Previously used in admin interface, but was replaced with a function get-chat-messages
+   to extract all messages (not only from the user), sent to the chat of the bot with user."
+  (mito:select-dao 'message
+    (where (:= :chat_id (object-id chat)))
+    (order-by (:desc :created_at))
+    (limit limit)))

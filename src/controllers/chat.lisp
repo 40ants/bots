@@ -130,4 +130,3 @@ where u.id = ?"
 
 (defun get-all-chats ()
   (nth-value 0 (mito:select-dao 'chat)))
-

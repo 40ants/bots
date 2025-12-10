@@ -37,6 +37,8 @@
                 #:get-private-chat)
   (:import-from #:reblocks-ui2/themes/styling
                 #:css-classes)
+  (:import-from #:40ants-bots/controllers/message
+                #:get-chat-messages)
   (:export #:make-user-messages-page))
 (in-package #:40ants-bots/admin/pages/user-messages)
 
@@ -84,9 +86,9 @@
 
 
 (defmethod render ((widget user-messages-page) (theme tailwind-theme))
-  (let* ((messages (get-user-messages (user-id widget)))
-         (user (get-user-by-id (user-id widget)))
-         (chat (get-private-chat user)))
+  (let* ((user (get-user-by-id (user-id widget)))
+         (private-chat (get-private-chat user))
+         (messages (get-chat-messages private-chat)))
     (with-html ()
       (:div :class "flex flex-col gap-8"
             (:div :class "flex flex-col gap-4"
@@ -95,6 +97,6 @@
                                    theme)))
             (:div :class "flex flex-col gap-4"
                   (render (card
-                           (send-message-form user chat))
+                           (send-message-form user private-chat))
                           theme))))))
 
