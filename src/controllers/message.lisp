@@ -13,6 +13,7 @@
                 #:offset
                 #:limit)
   (:import-from #:serapeum
+                #:soft-list-of
                 #:->)
   (:import-from #:40ants-bots/models/chat
                 #:chat)
@@ -67,24 +68,39 @@ from updated_records
                        :raw (or raw (make-hash-table))))))
 
 
+(-> get-message (integer)
+    (values (or null message)
+            &optional))
+
 (defun get-message (id)
   "Возвращает сообщение по его ID."
   (mito:find-dao 'message :id id))
 
+
+(-> list-messages (&key (:limit integer) (:offset integer))
+    (values (soft-list-of message)
+            &optional))
+
 (defun list-messages (&key (limit 100) (offset 0))
   "Возвращает список сообщений с пагинацией."
-  (mito:select-dao 'message
-    (limit limit)
-    (offset offset)
-    (order-by (:desc :created-at))))
+  (values
+   (mito:select-dao 'message
+     (limit limit)
+     (offset offset)
+     (order-by (:desc :created-at)))))
 
+
+(-> get-chat-messages (chat &key (:limit (or null integer)))
+    (values (soft-list-of message)
+            &optional))
 
 (defun get-chat-messages (chat &key (limit 10))
   "Returns messages sent by user to any chats.
 
    Previously used in admin interface, but was replaced with a function get-chat-messages
    to extract all messages (not only from the user), sent to the chat of the bot with user."
-  (mito:select-dao 'message
-    (where (:= :chat_id (object-id chat)))
-    (order-by (:desc :created_at))
-    (limit limit)))
+  (values
+   (mito:select-dao 'message
+     (where (:= :chat_id (object-id chat)))
+     (order-by (:desc :created_at))
+     (limit limit))))

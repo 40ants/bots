@@ -88,15 +88,20 @@
 (defmethod render ((widget user-messages-page) (theme tailwind-theme))
   (let* ((user (get-user-by-id (user-id widget)))
          (private-chat (get-private-chat user))
-         (messages (get-chat-messages private-chat)))
+         (messages (when private-chat
+                     (get-chat-messages private-chat))))
     (with-html ()
       (:div :class "flex flex-col gap-8"
-            (:div :class "flex flex-col gap-4"
-                  (loop for message in (reverse messages)
-                        do (render (make-message-widget message)
-                                   theme)))
-            (:div :class "flex flex-col gap-4"
-                  (render (card
-                           (send-message-form user private-chat))
-                          theme))))))
+            (cond
+              (private-chat
+               (:div :class "flex flex-col gap-4"
+                     (loop for message in (reverse messages)
+                           do (render (make-message-widget message)
+                                      theme)))
+               (:div :class "flex flex-col gap-4"
+                     (render (card
+                              (send-message-form user private-chat))
+                             theme)))
+              (t
+               (:p "Этот пользователь пока не писал боту.")))))))
 
