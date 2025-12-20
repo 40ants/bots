@@ -28,7 +28,9 @@
                 #:var)
   (:import-from #:40ants-bots/telegram/utils
                 #:get-message-from-update
-                #:get-text-from-message-if-possible))
+                #:get-text-from-message-if-possible)
+  (:import-from #:40ants-bots/controllers/dwh
+                #:maybe-save-update-to-dwh))
 (in-package #:40ants-bots/pipeline)
 
 
@@ -103,9 +105,12 @@
                    (values))))
 
           (let ((payload (get-message-from-update update)))
-            (when (typep payload 'cl-telegram-bot2/api:message)
-              (save-message payload
-                            :incomingp t)))
+            (cond
+              ((typep payload 'cl-telegram-bot2/api:message)
+               (save-message payload
+                             :incomingp t))
+              (t
+               (maybe-save-update-to-dwh update))))
         
           (multiple-value-bind (sent-messages result)
               (collect-sent-messages
