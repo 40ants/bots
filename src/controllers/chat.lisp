@@ -1,5 +1,7 @@
 (uiop:define-package #:40ants-bots/controllers/chat
   (:use #:cl)
+  (:import-from #:cl-telegram-bot2/spec
+                #:telegram-object)
   (:import-from #:40ants-bots/models/chat
                 #:chat
                 #:chat-id
@@ -136,17 +138,15 @@ where u.id = ?"
 
 
 (defgeneric get-chat-from (platform obj)
-  (:method ((platform (eql :telegram)) (update cl-telegram-bot2/api:update))
-    (get-chat-from platform (cl-telegram-bot2/api:update-message update)))
-  
-  (:method ((platform (eql :telegram)) (message cl-telegram-bot2/api:message))
-    (let* ((api-chat (cl-telegram-bot2/pipeline::get-chat message))
-           (chat-platform-id (cl-telegram-bot2/api:chat-id api-chat))
-           (chat-type (make-keyword (string-upcase
-                                     (or (cl-telegram-bot2/api::chat-type api-chat)
-                                         (error "No chat type")))))
-           (chat-as-json (cl-telegram-bot2/spec::unparse api-chat)))
-      (get-or-create-chat :telegram
-                          chat-platform-id
-                          :type chat-type
-                          :raw chat-as-json))))
+  (:method ((platform (eql :telegram)) (obj telegram-object))
+    (let* ((api-chat (cl-telegram-bot2/pipeline::get-chat obj)))
+      (when api-chat
+        (let* ((chat-platform-id (cl-telegram-bot2/api:chat-id api-chat))
+               (chat-type (make-keyword (string-upcase
+                                         (or (cl-telegram-bot2/api::chat-type api-chat)
+                                             (error "No chat type")))))
+               (chat-as-json (cl-telegram-bot2/spec::unparse api-chat)))
+          (get-or-create-chat :telegram
+                              chat-platform-id
+                              :type chat-type
+                              :raw chat-as-json))))))

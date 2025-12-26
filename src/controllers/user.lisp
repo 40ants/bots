@@ -1,5 +1,7 @@
 (uiop:define-package #:40ants-bots/controllers/user
   (:use #:cl)
+  (:import-from #:cl-telegram-bot2/spec
+                #:telegram-object)
   (:import-from #:40ants-bots/models/user
                 #:user-platform
                 #:user-platform-id
@@ -124,13 +126,10 @@
 
 
 (defgeneric get-user-from (platform obj)
-  (:method ((platform (eql :telegram)) (update cl-telegram-bot2/api:update))
-    (get-user-from platform (cl-telegram-bot2/api:update-message update)))
-  
-  (:method ((platform (eql :telegram)) (message cl-telegram-bot2/api:message))
+  (:method ((platform (eql :telegram)) (obj telegram-object))
     (let* (;; Не все типы message могут быть привязаны к автору.
            ;; У тех что отправлены в канал, from не заполнено.
-           (api-user (cl-telegram-bot2/pipeline::get-user message))
+           (api-user (cl-telegram-bot2/pipeline::get-user obj))
            (user-platform-id (when api-user
                                (cl-telegram-bot2/api:user-id api-user)))
            (username (when api-user
