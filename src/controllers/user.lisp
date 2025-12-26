@@ -21,13 +21,16 @@
                 #:universal-to-timestamp)
   (:import-from #:40ants-bots/models/message
                 #:message)
+  (:import-from #:serapeum
+                #:->)
   (:export #:get-user
            #:create-user
            #:get-or-create-user
            #:get-current-user
            #:get-num-messages
            #:get-latest-message
-           #:get-user-messages))
+           #:get-user-messages
+           #:get-user-from))
 (in-package #:40ants-bots/controllers/user)
 
 
@@ -120,4 +123,24 @@
     (limit limit)))
 
 
+(defgeneric get-user-from (platform obj)
+  (:method ((platform (eql :telegram)) (update cl-telegram-bot2/api:update))
+    (get-user-from platform (cl-telegram-bot2/api:update-message update)))
+  
+  (:method ((platform (eql :telegram)) (message cl-telegram-bot2/api:message))
+    (let* (;; Не все типы message могут быть привязаны к автору.
+           ;; У тех что отправлены в канал, from не заполнено.
+           (api-user (cl-telegram-bot2/pipeline::get-user message))
+           (user-platform-id (when api-user
+                               (cl-telegram-bot2/api:user-id api-user)))
+           (username (when api-user
+                       (cl-telegram-bot2/api:user-username api-user)))
+           (user-as-json (when api-user
+                           (cl-telegram-bot2/spec::unparse api-user))))
+    
+      (when api-user
+        (get-or-create-user :telegram
+                            user-platform-id
+                            username
+                            user-as-json)))))
 
