@@ -34,7 +34,8 @@
            #:get-private-chat
            #:get-chat-title
            #:get-chat-url
-           #:get-chat-from))
+           #:get-chat-from
+           #:get-chat-username))
 (in-package #:40ants-bots/controllers/chat)
 
 
@@ -115,6 +116,16 @@ where u.id = ?"
 (defun get-chat-title (chat)
   (values
    (gethash "title"
+            (chat-raw chat))))
+
+
+(-> get-chat-username (chat)
+    (values (or null string) &optional))
+
+
+(defun get-chat-username (chat)
+  (values
+   (gethash "username"
             (chat-raw chat))))
 
 
