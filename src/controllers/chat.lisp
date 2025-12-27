@@ -1,5 +1,7 @@
 (uiop:define-package #:40ants-bots/controllers/chat
   (:use #:cl)
+  (:import-from #:cl-telegram-bot2/spec
+                #:telegram-object)
   (:import-from #:40ants-bots/models/chat
                 #:chat
                 #:chat-id
@@ -21,6 +23,8 @@
                 #:fmt
                 #:soft-list-of
                 #:->)
+  (:import-from #:alexandria
+                #:make-keyword)
   (:export #:create-chat
            #:get-chat-by-id
            #:get-chat-by-platform-id
@@ -29,7 +33,8 @@
            #:get-current-chat
            #:get-private-chat
            #:get-chat-title
-           #:get-chat-url))
+           #:get-chat-url
+           #:get-chat-from))
 (in-package #:40ants-bots/controllers/chat)
 
 
@@ -55,12 +60,12 @@
   (mito:find-dao 'chat :id id))
 
 
-(defun get-chat-by-platform-id (platform platform-id &optional (type :chat))
+(defun get-chat-by-platform-id (platform platform-id)
   "Находит чат по platform, platform-id и type."
   (mito:find-dao 'chat
                  :platform platform
-                 :platform-id platform-id
-                 :type type))
+                 :platform-id platform-id))
+
 
 (defun list-chats (&key (limit 100) (offset 0))
   "Возвращает список чатов с пагинацией."
@@ -72,7 +77,7 @@
 
 (defun get-or-create-chat (platform platform-id &key (type :chat) raw)
   "Находит или создает чат по platform, platform-id и type."
-  (or (get-chat-by-platform-id platform platform-id type)
+  (or (get-chat-by-platform-id platform platform-id)
       (create-chat platform platform-id :type type :raw raw)))
 
 
@@ -130,3 +135,18 @@ where u.id = ?"
 
 (defun get-all-chats ()
   (nth-value 0 (mito:select-dao 'chat)))
+
+
+(defgeneric get-chat-from (platform obj)
+  (:method ((platform (eql :telegram)) (obj telegram-object))
+    (let* ((api-chat (cl-telegram-bot2/pipeline::get-chat obj)))
+      (when api-chat
+        (let* ((chat-platform-id (cl-telegram-bot2/api:chat-id api-chat))
+               (chat-type (make-keyword (string-upcase
+                                         (or (cl-telegram-bot2/api::chat-type api-chat)
+                                             (error "No chat type")))))
+               (chat-as-json (cl-telegram-bot2/spec::unparse api-chat)))
+          (get-or-create-chat :telegram
+                              chat-platform-id
+                              :type chat-type
+                              :raw chat-as-json))))))

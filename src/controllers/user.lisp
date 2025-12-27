@@ -1,5 +1,7 @@
 (uiop:define-package #:40ants-bots/controllers/user
   (:use #:cl)
+  (:import-from #:cl-telegram-bot2/spec
+                #:telegram-object)
   (:import-from #:40ants-bots/models/user
                 #:user-platform
                 #:user-platform-id
@@ -22,7 +24,8 @@
   (:import-from #:40ants-bots/models/message
                 #:message)
   (:import-from #:serapeum
-                #:fmt)
+                #:fmt
+                #:->)
   (:export #:get-user
            #:create-user
            #:get-or-create-user
@@ -30,7 +33,8 @@
            #:get-num-messages
            #:get-latest-message
            #:get-user-messages
-           #:get-username-or-full-name))
+           #:get-username-or-full-name
+           #:get-user-from))
 (in-package #:40ants-bots/controllers/user)
 
 
@@ -126,6 +130,23 @@
     (limit limit)))
 
 
+(defgeneric get-user-from (platform obj)
+  (:method ((platform (eql :telegram)) (obj telegram-object))
+    (let* (;; Не все типы message могут быть привязаны к автору.
+           ;; У тех что отправлены в канал, from не заполнено.
+           (api-user (cl-telegram-bot2/pipeline::get-user obj))
+           (user-platform-id (when api-user
+                               (cl-telegram-bot2/api:user-id api-user)))
+           (username (when api-user
+                       (cl-telegram-bot2/api:user-username api-user)))
+           (user-as-json (when api-user
+                           (cl-telegram-bot2/spec::unparse api-user))))
+    
+      (when api-user
+        (get-or-create-user :telegram
+                            user-platform-id
+                            username
+                            user-as-json)))))
 
 (defun get-username-or-full-name (user)
   (let* ((username (user-username user))
