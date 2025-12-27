@@ -13,3 +13,6 @@
 
 (defvar-unbound *current-bot*
   "Содержит текущего бота, который обрабатывает сообщение.")
+
+(defvar-unbound *current-db-message*
+  "Contains a NIL or object of type 40ANTS-BOTS/MODELS/MESSAGE:MESSAGE, created while processing a current update.")

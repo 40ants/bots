@@ -23,10 +23,13 @@
                 #:with-transaction)
   (:import-from #:mito
                 #:object-id)
+  (:import-from #:40ants-bots/vars
+                #:*current-db-message*)
   (:export #:create-message
            #:get-message
            #:list-messages
-           #:get-chat-messages))
+           #:get-chat-messages
+           #:get-current-message))
 (in-package #:40ants-bots/controllers/message)
 
 
@@ -104,3 +107,14 @@ from updated_records
      (where (:= :chat_id (object-id chat)))
      (order-by (:desc :created_at))
      (limit limit))))
+
+
+(-> get-current-message ()
+    (values (or null message)
+            &optional))
+
+(defun get-current-message ()
+  "Возвращает текущий активный чат из переменной *current-chat*."
+  (unless (boundp '*current-db-message*)
+    (error "Use GET-CURRENT-DB-MESSAGE during message processing."))
+  *current-db-message*)

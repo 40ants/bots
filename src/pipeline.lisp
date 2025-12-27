@@ -5,6 +5,7 @@
   (:import-from #:40ants-bots/bot
                 #:bot)
   (:import-from #:40ants-bots/vars
+                #:*current-db-message*
                 #:*current-bot*
                 #:*current-user*
                 #:*current-chat*)
@@ -67,34 +68,34 @@
                               ;; from the bot for which we have no a record in the bots.users table:
                               (t
                                nil)))
-                      (message (create-message platform
-                                               message-platform-id
-                                               chat
-                                               user
-                                               (or (get-text-from-message-if-possible message)
-                                                   "No text")
-                                               :incomingp incomingp
-                                               :raw message-as-json))
-                      (message-id (mito:object-id message)))
+                      (db-message (create-message platform
+                                                  message-platform-id
+                                                  chat
+                                                  user
+                                                  (or (get-text-from-message-if-possible message)
+                                                      "No text")
+                                                  :incomingp incomingp
+                                                  :raw message-as-json))
+                      (message-id (mito:object-id db-message)))
                  (when incomingp
                    (setf (var "40bots:last-incoming-message-id")
                          message-id))
-                 (values))))
+                 (values db-message))))
 
-        (let ((payload (get-message-from-update update)))
-          (cond
-            ((typep payload 'cl-telegram-bot2/api:message)
-             (save-message payload
-                           :incomingp t))
-            (t
-             (maybe-save-update-to-dwh update))))
+        (maybe-save-update-to-dwh update)
         
-        (multiple-value-bind (sent-messages result)
-            (collect-sent-messages
-              (call-next-method))
+        (let* ((payload (get-message-from-update update))
+               (*current-db-message*
+                 (when (typep payload 'cl-telegram-bot2/api:message)
+                   (save-message payload
+                                 :incomingp t))))
+          
+          (multiple-value-bind (sent-messages result)
+              (collect-sent-messages
+                (call-next-method))
 
-          (loop for message in sent-messages
-                do (log:info "Sent message" message)
-                   (save-message message
-                                 :incomingp nil))
-          (values result))))))
+            (loop for message in sent-messages
+                  do (log:info "Sent message" message)
+                     (save-message message
+                                   :incomingp nil))
+            (values result)))))))
