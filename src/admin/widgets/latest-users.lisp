@@ -10,6 +10,7 @@
   (:import-from #:reblocks/html
                 #:with-html)
   (:import-from #:40ants-bots/controllers/user
+                #:get-username-or-full-name
                 #:get-latest-users)
   (:import-from #:reblocks-ui2/tables/table
                 #:column
@@ -41,7 +42,6 @@
   (make-instance 'latest-users))
 
 
-
 (defmethod render ((widget latest-users) (theme tailwind-theme))
   (with-html ()
     (:h2 :class "text-2xl"
@@ -54,8 +54,7 @@
                             :cell-maker (lambda (user)
                                           (html ((:a :href (route-url "user"
                                                                       :user-id (object-id user))
-                                                     (user-username user))))
-                                          ))
+                                                     (get-username-or-full-name user))))))
                     (column "Created At"
                             :getter #'object-created-at
                             :cell-maker (compose #'reblocks/widgets/string-widget:make-string-widget

@@ -21,13 +21,16 @@
                 #:universal-to-timestamp)
   (:import-from #:40ants-bots/models/message
                 #:message)
+  (:import-from #:serapeum
+                #:fmt)
   (:export #:get-user
            #:create-user
            #:get-or-create-user
            #:get-current-user
            #:get-num-messages
            #:get-latest-message
-           #:get-user-messages))
+           #:get-user-messages
+           #:get-username-or-full-name))
 (in-package #:40ants-bots/controllers/user)
 
 
@@ -35,7 +38,10 @@
   (print-unreadable-object (obj stream :type t)
     (format stream "~A ~A"
             (user-platform obj)
-            (or (user-username obj)
+            (or (let ((name (user-username obj)))
+                  (when (and name
+                             (not (string= name "")))
+                    name))
                 (user-platform-id obj)))))
 
 
@@ -121,3 +127,23 @@
 
 
 
+(defun get-username-or-full-name (user)
+  (let* ((username (user-username user))
+         (raw (40ants-bots/models/user:user-raw user))
+         (first-name (gethash "first_name" raw))
+         (last-name (gethash "last_name" raw)))
+    (cond
+      ((and username
+            (not (string= username
+                          "")))
+       username)
+      ((and first-name last-name)
+       (fmt "~A ~A"
+            first-name
+            last-name))
+      (first-name
+       first-name)
+      (last-name
+       last-name)
+      (t
+       "Anonymous"))))
