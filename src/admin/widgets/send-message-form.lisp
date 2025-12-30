@@ -120,14 +120,13 @@
            (values)))
     (form
      (column
-      (html ((:h2 :class "text-2xl"
+      (html ((:h2 :class "text-2xl text-blue-600"
                   "Ответить")))
       (row
        (textarea :name "text"
                  :size :l)
        (button "Отправить"
                :view :action))
-      ;; :css-classes "!items-begin"
-      )
+      :css-classes "items-start")
      :on-submit #'on-submit)))
 
