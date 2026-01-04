@@ -52,14 +52,16 @@
                                          100)
                               :raw (cl-telegram-bot2/spec::unparse successful-payment))
 
-        (on-success-payment (get-current-bot)
-                            payment)
-        
-        (remove-if #'null
-                   (list (when send-text
-                           (send-text send-text))
-                         (when back-to-id
-                           (back-to-id back-to-id))))))))
+        ;; Returning actions in response to successful-payment:
+        (append
+         (remove-if #'null
+                    (list (when send-text
+                            (send-text send-text))
+                          (when back-to-id
+                            (back-to-id back-to-id))))
+         (uiop:ensure-list
+          (on-success-payment (get-current-bot)
+                              payment)))))))
 
 
 ;; TODO: think how to support (or string symbol) for title, description, prices

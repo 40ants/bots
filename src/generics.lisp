@@ -10,4 +10,6 @@
 First argument will be a platform dependent bot instance,
 the second instance will be a mito dao object of 40ANTS-BOTS/MODELS/PAYMENT:PAYMENT type.
 
-The end user must define a method to process successul payments."))
+The end user must define a method to process successul payments.
+
+Returned value should be a NIL or a list of bot actions or a state."))
