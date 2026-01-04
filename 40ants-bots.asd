@@ -1,4 +1,5 @@
 #-asdf3.1 (error "40ants-bots requires ASDF 3.1 because for lower versions pathname does not work for package-inferred systems.")
+
 (defsystem "40ants-bots"
   :description "Framework for build products around chat bots. Includes bot DSL and admin interface for interacting with bot users."
   :author "Alexander Artemenko <svetlyak.40wt@gmail.com>"
@@ -19,5 +20,6 @@
                "40ants-bots/controllers/message"
                "40ants-bots/controllers/user"
                "40ants-bots/telegram/feedback"
-               "40ants-bots/telegram/payment")
+               "40ants-bots/telegram/payment"
+               "40ants-bots/controllers/delayed-trigger")
   :in-order-to ((test-op (test-op "40ants-bots-tests"))))
