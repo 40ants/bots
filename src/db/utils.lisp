@@ -25,16 +25,18 @@
   (make-keyword (string-upcase value)))
 
 
-(-> hash-to-db (hash-table)
-    (values string &optional))
+(-> hash-to-db ((or null hash-table))
+    (values (or null string) &optional))
 
 (defun hash-to-db (value)
-  (yason:with-output-to-string* ()
-    (yason:encode value)))
+  (when value
+    (yason:with-output-to-string* ()
+      (yason:encode value))))
 
 
-(-> hash-from-db (string)
-    (values hash-table &optional))
+(-> hash-from-db ((or null string))
+    (values (or null hash-table) &optional))
 
 (defun hash-from-db (value)
-  (yason:parse value))
+  (when value
+    (yason:parse value)))

@@ -1,7 +1,10 @@
 (uiop:define-package #:40ants-bots/vars
   (:use #:cl)
   (:import-from #:serapeum
-                #:defvar-unbound))
+                #:defvar-unbound)
+  (:export
+   #:*seconds-between-trigger-attempts*
+   #:*max-trigger-attemps*))
 (in-package #:40ants-bots/vars)
 
 
@@ -16,3 +19,11 @@
 
 (defvar-unbound *current-db-message*
   "Contains a NIL or object of type 40ANTS-BOTS/MODELS/MESSAGE:MESSAGE, created while processing a current update.")
+
+
+(defvar *max-trigger-attemps* 5
+  "Number of attempts to process a trigger.")
+
+
+(defparameter *seconds-between-trigger-attempts* (* 1 60)
+  "Number of attempts to process a trigger.")
