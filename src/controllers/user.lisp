@@ -34,7 +34,8 @@
            #:get-latest-message
            #:get-user-messages
            #:get-username-or-full-name
-           #:get-user-from))
+           #:get-user-from
+           #:get-user-by-id))
 (in-package #:40ants-bots/controllers/user)
 
 

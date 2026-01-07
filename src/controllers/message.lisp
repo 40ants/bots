@@ -104,7 +104,8 @@ from updated_records
    to extract all messages (not only from the user), sent to the chat of the bot with user."
   (values
    (mito:select-dao 'message
-     (where (:= :chat_id (object-id chat)))
+     (where (:and (:= :chat_id (object-id chat))
+                  (:= :is_actual 1)))
      (order-by (:desc :created_at))
      (limit limit))))
 
