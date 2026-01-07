@@ -3,6 +3,7 @@
   (:import-from #:cl-telegram-bot2/spec
                 #:telegram-object)
   (:import-from #:40ants-bots/models/chat
+                #:chat-bot-is-banned-p
                 #:chat
                 #:chat-id
                 #:chat-platform
@@ -25,6 +26,11 @@
                 #:->)
   (:import-from #:alexandria
                 #:make-keyword)
+  (:import-from #:40ants-bots/generics
+                #:on-add-to-chat-as-member
+                #:on-add-to-chat-as-admin)
+  (:import-from #:mito
+                #:save-dao)
   (:export #:create-chat
            #:get-chat-by-id
            #:get-chat-by-platform-id
@@ -161,3 +167,25 @@ where u.id = ?"
                               chat-platform-id
                               :type chat-type
                               :raw chat-as-json))))))
+
+
+(defmethod on-add-to-chat-as-admin ((bot t) (platform t) (chat t))
+  (setf (chat-bot-is-banned-p chat)
+        nil)
+  (save-dao chat)
+  (values))
+
+
+(defmethod on-add-to-chat-as-member ((bot t) (platform t) (chat t))
+  (setf (chat-bot-is-banned-p chat)
+        nil)
+  (save-dao chat)
+  (values))
+
+
+
+(defmethod 40ants-bots/generics:on-remove-from-chat ((bot t) (platform t) (chat t))
+  (setf (chat-bot-is-banned-p chat)
+        t)
+  (save-dao chat)
+  (values))

@@ -19,18 +19,12 @@ Returned value should be a NIL or a list of bot actions or a state."))
 
 
 (defgeneric on-add-to-chat-as-admin (bot platform chat)
-  (:documentation "Called when bot was added to the chat as admin.")
-  (:method ((bot t) (platform t) (chat t))
-    (values)))
+  (:documentation "Called when bot was added to the chat as admin."))
 
 
 (defgeneric on-add-to-chat-as-member (bot platform chat)
-  (:documentation "Called when bot was added to the chat as usual member.")
-  (:method ((bot t) (platform t) (chat t))
-    (values)))
+  (:documentation "Called when bot was added to the chat as usual member."))
 
 
 (defgeneric on-remove-from-chat (bot platform chat)
-  (:documentation "Called when bot was removed from the chat.")
-  (:method ((bot t) (platform t) (chat t))
-    (values)))
+  (:documentation "Called when bot was removed from the chat."))
