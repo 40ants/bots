@@ -23,8 +23,12 @@
                 #:format-date)
   (:import-from #:mito
                 #:object-created-at)
+  (:import-from #:40ants-bots/controllers/chat
+                #:get-private-chat)
   (:import-from #:40ants-routes/route-url
                 #:route-url)
+  (:import-from #:40ants-bots/models/chat
+                #:chat-bot-is-blocked-p)
   (:export #:make-user-page))
 (in-package #:40ants-bots/admin/pages/user)
 
@@ -42,7 +46,10 @@
 
 
 (defmethod render ((widget user-page) (theme tailwind-theme))
-  (let* ((user (get-user-by-id (user-id widget))))
+  (let* ((user (get-user-by-id (user-id widget)))
+         (chat (get-private-chat user))
+         (is-blocked (when chat
+                       (chat-bot-is-blocked-p chat))))
     (cond
       (user
        (multiple-value-bind (latest-message incoming latest-message-date)
@@ -55,25 +62,36 @@
             (:tr
              (:td "Registered")
              (:td (format-date (object-created-at user))))
-            (:tr
-             (:td "Num Messages")
-             (:td (fmt "~A" (get-num-messages user))))
-            (:tr
-             (:td "Latest message at")
-             (:td (if latest-message-date
-                      (format-date latest-message-date)
-                      "")))
-            (:tr
-             (:td "Latest message")
-             (:td (:a :href (route-url "user-messages"
-                                       :user-id (user-id widget))
-                      (if latest-message
-                          (concatenate 'string
-                                       (if incoming
-                                           "⬇ "
-                                           "⬆ ")
-                                       (str:shorten 50 latest-message))
-                          "No messages"))))))))
+            (cond
+              (chat
+               (when is-blocked
+                 (:tr
+                  (:td "Chat state")
+                  (:td "🚫 Этот пользователь заблокировал бота.")))
+               (:tr
+                (:td "Num Messages")
+                (:td (fmt "~A" (get-num-messages user))))
+               (:tr
+                (:td "Latest message at")
+                (:td (if latest-message-date
+                         (format-date latest-message-date)
+                         "")))
+               (:tr
+                (:td "Latest message")
+                (:td (:a :href (route-url "user-messages"
+                                          :user-id (user-id widget))
+                         (if latest-message
+                             (concatenate 'string
+                                          (if incoming
+                                              "⬇ "
+                                              "⬆ ")
+                                          (str:shorten 50 latest-message))
+                             "No messages")))))
+              ;; No chat
+              (t
+               (:tr
+                (:td "Chat state")
+                (:td "Этот пользователь не начинал чат с ботом."))))))))
 
       (t
        (reblocks/response:not-found-error (fmt "User with id ~A not found"
