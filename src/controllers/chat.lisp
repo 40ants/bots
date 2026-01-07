@@ -2,8 +2,9 @@
   (:use #:cl)
   (:import-from #:cl-telegram-bot2/spec
                 #:telegram-object)
+  (:import-from #:log)
   (:import-from #:40ants-bots/models/chat
-                #:chat-bot-is-banned-p
+                #:chat-bot-is-blocked-p
                 #:chat
                 #:chat-id
                 #:chat-platform
@@ -30,7 +31,10 @@
                 #:on-add-to-chat-as-member
                 #:on-add-to-chat-as-admin)
   (:import-from #:mito
+                #:object-id
                 #:save-dao)
+  (:import-from #:log4cl-extras/context
+                #:with-fields)
   (:export #:create-chat
            #:get-chat-by-id
            #:get-chat-by-platform-id
@@ -169,23 +173,27 @@ where u.id = ?"
                               :raw chat-as-json))))))
 
 
+(defun update-blocked-status (chat &key (is-blocked (error "is-blocked is required argument")))
+  (with-fields (:chat-id (object-id chat))
+    (if is-blocked
+        (log:info "Bot was blocked in chat")
+        (log:info "Bot was unblocked in chat"))
+  
+    (setf (chat-bot-is-blocked-p chat)
+          is-blocked)
+    (save-dao chat)))
+
+
 (defmethod on-add-to-chat-as-admin ((bot t) (platform t) (chat t))
-  (setf (chat-bot-is-banned-p chat)
-        nil)
-  (save-dao chat)
+  (update-blocked-status chat :is-blocked nil)
   (values))
 
 
 (defmethod on-add-to-chat-as-member ((bot t) (platform t) (chat t))
-  (setf (chat-bot-is-banned-p chat)
-        nil)
-  (save-dao chat)
+  (update-blocked-status chat :is-blocked nil)
   (values))
 
 
-
 (defmethod 40ants-bots/generics:on-remove-from-chat ((bot t) (platform t) (chat t))
-  (setf (chat-bot-is-banned-p chat)
-        t)
-  (save-dao chat)
+  (update-blocked-status chat :is-blocked t)
   (values))

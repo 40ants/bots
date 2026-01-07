@@ -99,9 +99,13 @@
                            do (render (make-message-widget message)
                                       theme)))
                (:div :class "flex flex-col gap-4"
-                     (render (card
-                              (send-message-form user private-chat))
-                             theme)))
+                     (cond
+                       ((40ants-bots/models/chat:chat-bot-is-blocked-p private-chat)
+                        (:p "В этом чате бот заблокирован - невозможно отправить сообщение от его имени."))
+                       (t
+                        (render (card
+                                 (send-message-form user private-chat))
+                                theme)))))
               (t
                (:p "Этот пользователь пока не писал боту.")))))))
 

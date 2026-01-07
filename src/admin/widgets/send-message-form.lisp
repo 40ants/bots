@@ -114,7 +114,15 @@
 
            (call-while-saving-messages widget
                                        (lambda ()
-                                         (send-message (user widget) text)))
+                                         (handler-case
+                                             (send-message (user widget) text)
+                                           (40ants-bots/errors:bot-blocked-error ()
+                                             (log:warn "Message was not sent because bot is blocked.")
+                                             ;; Validation errors in reblocks-ui2 are not supported yet
+                                             ;; (error 'reblocks-ui2/form/validation:form-validation-error
+                                             ;;  :num-errors 1
+                                             ;;  :error-message "Message was not sent because bot is blocked.")
+                                             ))))
 
            (update widget)
            (values)))

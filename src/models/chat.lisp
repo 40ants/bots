@@ -11,7 +11,7 @@
            #:chat-platform-id
            #:chat-type
            #:chat-raw
-           #:chat-bot-is-banned-p))
+           #:chat-bot-is-blocked-p))
 (in-package #:40ants-bots/models/chat)
 
 
@@ -29,11 +29,11 @@
          :inflate #'keyword-from-db
          :deflate #'keyword-to-db
          :initform :chat)
-   (bot-is-banned :initarg :bot-is-banned
-                  :initform nil
-                  :col-type :boolean
-                  :type boolean
-                  :accessor chat-bot-is-banned-p)
+   (bot-is-blocked :initarg :bot-is-blocked
+                   :initform nil
+                   :col-type :boolean
+                   :type boolean
+                   :accessor chat-bot-is-blocked-p)
    (raw :initarg :raw
         :col-type :jsonb
         :type hash-table
