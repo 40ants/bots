@@ -32,6 +32,10 @@
                 #:on-success-payment)
   (:import-from #:40ants-bots/controllers/bot
                 #:get-current-bot)
+  (:import-from #:log4cl-extras/context
+                #:with-fields)
+  (:import-from #:mito
+                #:object-id)
   (:export
    #:send-invoice))
 (in-package #:40ants-bots/telegram/payment)
@@ -87,20 +91,25 @@
                 ;; Telegram reuquires to specify
                 ;; amount in cents
                 100)))
+         (chat (get-current-chat))
+         (user (get-current-user))
          (payment (create-payment :telegram
-                                  (get-current-chat)
-                                  (get-current-user)
+                                  chat
+                                  user
                                   currency
                                   :amount amount
                                   :extra-info (or extra-info
                                                   (dict)))))
-    (cl-telegram-bot2/actions/send-invoice:send-invoice
-     title
-     description
-     ;; payload
-     (princ-to-string (mito:object-id payment))
-     provider-token
-     (string-upcase currency)
-     prices
-     :on-success 'process-success-payment
-     :commands commands)))
+    (with-fields (:chat-id (object-id chat)
+                  :user-id (object-id user))
+      (log:info "Sending invoice")
+      (cl-telegram-bot2/actions/send-invoice:send-invoice
+       title
+       description
+       ;; payload
+       (princ-to-string (mito:object-id payment))
+       provider-token
+       (string-upcase currency)
+       prices
+       :on-success 'process-success-payment
+       :commands commands))))
