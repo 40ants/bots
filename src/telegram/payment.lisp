@@ -36,6 +36,8 @@
                 #:with-fields)
   (:import-from #:mito
                 #:object-id)
+  (:import-from #:secret-values
+                #:secret-value)
   (:export
    #:send-invoice))
 (in-package #:40ants-bots/telegram/payment)
@@ -71,7 +73,8 @@
 ;; TODO: think how to support (or string symbol) for title, description, prices
 (-> send-invoice (string
                   string
-                  string
+                  (or string
+                      secret-value)
                   keyword
                   cl-telegram-bot2/actions/send-invoice:prices-list
                   &key
