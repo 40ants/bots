@@ -8,7 +8,14 @@
                 #:back-to-id)
   (:import-from #:cl-telegram-bot2/actions/send-text
                 #:send-text)
-  (:import-from #:cl-telegram-bot2/actions/send-invoice)
+  (:import-from #:cl-telegram-bot2/workflow
+                #:workflow-blocks
+                #:workflow-block)
+  (:import-from #:cl-telegram-bot2/actions/send-invoice
+                #:*default-prepare-text*
+                #:*default-on-cancel*
+                #:*default-pay-button-text*
+                #:*default-cancel-button-text*)
   (:import-from #:40ants-bots/controllers/chat
                 #:get-current-chat)
   (:import-from #:40ants-bots/controllers/user
@@ -70,19 +77,33 @@
                               payment)))))))
 
 
-;; TODO: think how to support (or string symbol) for title, description, prices
-(-> send-invoice (string
-                  string
-                  (or string
-                      secret-value)
+(-> send-invoice ((or string symbol)
+                  (or string symbol)
+                  (or string secret-value)
                   keyword
                   cl-telegram-bot2/actions/send-invoice:prices-list
                   &key
+                  (:on-cancel (or workflow-block
+                                  workflow-blocks
+                                  symbol))
+                  (:prepare-text (or string
+                                     symbol))
+                  (:pay-button-text (or string
+                                        symbol))
+                  (:cancel-button-text (or string
+                                           symbol))
                   (:commands (soft-list-of command))
                   (:extra-info hash-table))
     (values cl-telegram-bot2/actions/send-invoice:send-invoice &optional))
 
-(defun send-invoice (title description provider-token currency prices &key commands extra-info)
+(defun send-invoice (title description provider-token currency prices
+                     &key
+                     (on-cancel *default-on-cancel*)
+                     (prepare-text *default-prepare-text*)
+                     (pay-button-text *default-pay-button-text*)
+                     (cancel-button-text *default-cancel-button-text*)
+                     commands
+                     extra-info)
   (let* ((amount
            ;; User might provide a few labeled amounts.
            ;; If there is only one, then we will fill amount
@@ -115,4 +136,8 @@
        (string-upcase currency)
        prices
        :on-success 'process-success-payment
+       :on-cancel on-cancel
+       :prepare-text prepare-text
+       :pay-button-text pay-button-text
+       :cancel-button-text cancel-button-text
        :commands commands))))

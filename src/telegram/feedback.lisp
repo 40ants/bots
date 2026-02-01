@@ -23,11 +23,13 @@
                 #:var)
   (:import-from #:40ants-bots/controllers/feedback
                 #:register-feedback-message)
-  (:export #:request-feedback))
+  (:export #:request-feedback
+           #:save-feedback))
 (in-package #:40ants-bots/telegram/feedback)
 
 
 (defun save-feedback ()
+  "Can be used directly to save any incoming message as a feedback from user."
   (log:info "Saving feedback from user")
 
   (let ((message-id (var "40bots:last-incoming-message-id"))
