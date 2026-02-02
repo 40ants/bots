@@ -30,9 +30,11 @@
                 #:length=)
   (:import-from #:log)
   (:import-from #:cl-telegram-bot2/api
+                #:successful-payment
                 #:successful-payment-total-amount
                 #:successful-payment-invoice-payload)
   (:import-from #:40ants-bots/models/payment
+                #:payment
                 #:payment-extra-info)
   (:import-from #:cl-telegram-bot2/spec)
   (:import-from #:40ants-bots/generics
@@ -50,31 +52,48 @@
 (in-package #:40ants-bots/telegram/payment)
 
 
+(-> process-payment (payment
+                     &key
+                     (:amount (or null integer))
+                     (:raw (or null hash-table)))
+    (values t &optional))
+
+
+(defun process-payment (payment &key amount raw)
+  (let* ((extra (payment-extra-info payment))
+         (send-text (gethash "send-text" extra))
+         (back-to-id (gethash "back-to-id" extra)))
+
+    (move-payment-to-paid payment
+                          :amount amount
+                          :raw raw)
+
+    ;; Returning actions in response to successful-payment:
+    (append
+     (remove-if #'null
+                (list (when send-text
+                        (send-text send-text))
+                      (when back-to-id
+                        (back-to-id back-to-id))))
+     (uiop:ensure-list
+      (on-success-payment (get-current-bot)
+                          payment)))))
+
+
+(-> process-success-payment (successful-payment)
+    (values t &optional))
+
 (defun process-success-payment (successful-payment)
   (log:info "Processing success payment" successful-payment)
   (let* ((payment-id-str (successful-payment-invoice-payload successful-payment))
          (payment-id (parse-integer payment-id-str))
          (payment (get-payment-by-id payment-id)))
     (when payment
-      (let* ((extra (payment-extra-info payment))
-             (send-text (gethash "send-text" extra))
-             (back-to-id (gethash "back-to-id" extra)))
-
-        (move-payment-to-paid payment
-                              :amount (/ (successful-payment-total-amount successful-payment)
-                                         100)
-                              :raw (cl-telegram-bot2/spec::unparse successful-payment))
-
-        ;; Returning actions in response to successful-payment:
-        (append
-         (remove-if #'null
-                    (list (when send-text
-                            (send-text send-text))
-                          (when back-to-id
-                            (back-to-id back-to-id))))
-         (uiop:ensure-list
-          (on-success-payment (get-current-bot)
-                              payment)))))))
+      (process-payment payment
+                       :amount
+                       (/ (successful-payment-total-amount successful-payment)
+                          100)
+                       :raw (cl-telegram-bot2/spec::unparse successful-payment)))))
 
 
 (-> send-invoice ((or string symbol)
