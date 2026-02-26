@@ -7,7 +7,8 @@
   (:export #:keyword-to-db
            #:keyword-from-db
            #:hash-to-db
-           #:hash-from-db))
+           #:hash-from-db
+           #:hash-from-db-with-vectors))
 (in-package #:40ants-bots/db/utils)
 
 
@@ -40,3 +41,12 @@
 (defun hash-from-db (value)
   (when value
     (yason:parse value)))
+
+
+(-> hash-from-db-with-vectors ((or null string))
+    (values (or null hash-table) &optional))
+
+(defun hash-from-db-with-vectors (value)
+  (when value
+    (yason:parse value
+                 :json-arrays-as-vectors t)))
