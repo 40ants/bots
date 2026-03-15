@@ -8,6 +8,7 @@
                 #:user-username
                 #:user)
   (:import-from #:mito
+                #:select-by-sql
                 #:object-id
                 #:retrieve-by-sql
                 #:select-dao
@@ -84,9 +85,23 @@
 
 
 (defun get-latest-users (&key (limit 10))
-  (select-dao 'user
-    (order-by (:desc :created-at))
-    (limit limit)))
+  (select-by-sql 'user
+                 "
+
+with users_with_messages as (
+    select u.id
+      from bots.users as u
+      join bots.messages as m on m.user_id = u.id
+     group by u.id
+     order by u.created_at desc
+     limit ?
+)
+select u.*
+  from users_with_messages as um
+  join bots.users as u using(id)
+ order by u.created_at desc
+"
+                 :binds (list limit)))
 
 
 (defun get-num-messages (user)
