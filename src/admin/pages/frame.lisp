@@ -20,6 +20,9 @@
   (:import-from #:40ants-bots/admin/vars
                 #:*default-title*
                 #:*site-admins*)
+  (:import-from #:40ants-routes/breadcrumbs
+                #:breadcrumb-path
+                #:breadcrumb-title)
   (:export #:make-page-frame))
 (in-package #:40ants-bots/admin/pages/frame)
 
@@ -47,7 +50,8 @@
 ;; (declaim (notinline render-frame))
 
 (defun render-frame (content &key (title *default-title*))
-  (let ((admin (is-user-admin-p)))
+  (let ((admin (is-user-admin-p))
+        (crumbs (40ants-routes/breadcrumbs:get-breadcrumbs)))
     (html ((:header :class "flex"
                     (:div :class "flex-auto text-4xl"
                           title)
@@ -67,6 +71,16 @@
                                       username))))
                          (t
                           (:div (render-buttons)))))))
+            (when crumbs
+              (:div :class "flex gap-2"
+                    (loop for crumb in crumbs
+                          for idx upfrom 0
+                          for last-elt = (= idx (1- (length crumbs)))
+                          do (:a :class "text-blue-600"
+                                 :href (breadcrumb-path crumb)
+                                 (breadcrumb-title crumb))
+                             (unless last-elt
+                               (:span ">")))))
             (:div
              (cond
                ((or (typep content 'login-processor)

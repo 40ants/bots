@@ -14,10 +14,32 @@
 (in-package #:40ants-bots/admin/routes)
 
 
+(defun get-user-name (user-id)
+  (let ((user (40ants-bots/controllers/user:get-user-by-id user-id)))
+    (cond
+      (user
+       (40ants-bots/controllers/user:get-username-or-full-name user))
+      (t
+       "Unknown"))))
+
+(defun get-user-route-title (&key user-id)
+  (cond
+    (user-id (format nil "User ~A" (get-user-name user-id)))
+    (t "User")))
+
+
+(defun get-user-messages-route-title (&key user-id)
+  (cond
+    (user-id (format nil "~A messages" (get-user-name user-id)))
+    (t "User")))
+
+
 (defroutes (*routes* :namespace "40ants-bots")
-  (page ("/user/<int:user-id>/messages" :name "user-messages" :title "User Messages")
-    (make-user-messages-page user-id))
-  (page ("/user/<int:user-id>" :name "user" :title "User")
-    (make-user-page user-id))
   (page ("/" :name "index" :title "Dashboard")
-    (make-dashboard-page)))
+    (make-dashboard-page))
+  (page ("/user/<int:user-id>" :name "user"
+                               :title #'get-user-route-title)
+    (make-user-page user-id))
+  (page ("/user/<int:user-id>/messages" :name "user-messages"
+                                        :title #'get-user-messages-route-title)
+    (make-user-messages-page user-id)))
