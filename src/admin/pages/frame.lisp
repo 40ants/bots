@@ -20,6 +20,9 @@
   (:import-from #:40ants-bots/admin/vars
                 #:*default-title*
                 #:*site-admins*)
+  (:import-from #:40ants-routes/breadcrumbs
+                #:breadcrumb-path
+                #:breadcrumb-title)
   (:export #:make-page-frame))
 (in-package #:40ants-bots/admin/pages/frame)
 
@@ -52,43 +55,55 @@
 (defun render-frame (content &key (title *default-title*))
   (multiple-value-bind (user is-admin-p)
       (get-user-details)
-    (html ((:header :class "flex"
-                    (:div :class "flex-auto text-4xl"
-                          title)
-                    (cond
-                      ((or (typep content 'login-processor)
-                           (typep content 'reblocks-auth:logout-processor))
-                       (:div content))
-                      (t
-                       (cond
-                         (user
-                          (let* ((profile (user-telegram-profile user))
-                                 (metadata (profile-metadata profile))
-                                 (username (gethash "username" metadata)))
+    
+    (let ((crumbs (40ants-routes/breadcrumbs:get-breadcrumbs)))
+      (html ((:header :class "flex"
+                      (:div :class "flex-auto text-4xl"
+                            title)
+                      (cond
+                        ((or (typep content 'login-processor)
+                             (typep content 'reblocks-auth:logout-processor))
+                         (:div content))
+                        (t
+                         (cond
+                           (user
+                            (let* ((profile (user-telegram-profile user))
+                                   (metadata (profile-metadata profile))
+                                   (username (gethash "username" metadata)))
 
-                            (:div (:span "You logged as")
-                                  (:span " ")
-                                  (:a :class "text-blue-600"
-                                      :href "/logout"
-                                      username))))
-                         (t
-                          (:div (render-buttons)))))))
-            (:div
-             (cond
-               ((or (typep content 'login-processor)
-                    (typep content 'reblocks-auth:logout-processor))
-                (:div content))
-               (t
-                (cond
-                  (is-admin-p
-                   (:div content))
-                  (user
-                   (:div :class "flex text-4xl"
-                         "У вас нет прав"))
-                  (t
-                   (:div :class "flex text-4xl"
-                         "Требуется вход")))))))
-          :css-classes "flex flex-col gap-8 mx-[1rem] sm:mx-[100px] md:mx-[200px] my-4")))
+                              (:div (:span "You logged as")
+                                    (:span " ")
+                                    (:a :class "text-blue-600"
+                                        :href "/logout"
+                                        username))))
+                           (t
+                            (:div (render-buttons)))))))
+              (when crumbs
+                (:div :class "flex gap-2"
+                      (loop for crumb in crumbs
+                            for idx upfrom 0
+                            for last-elt = (= idx (1- (length crumbs)))
+                            do (:a :class "text-blue-600"
+                                   :href (breadcrumb-path crumb)
+                                   (breadcrumb-title crumb))
+                               (unless last-elt
+                                 (:span ">")))))
+              (:div
+               (cond
+                 ((or (typep content 'login-processor)
+                      (typep content 'reblocks-auth:logout-processor))
+                  (:div content))
+                 (t
+                  (cond
+                    (is-admin-p
+                     (:div content))
+                    (user
+                     (:div :class "flex text-4xl"
+                           "У вас нет прав"))
+                    (t
+                     (:div :class "flex text-4xl"
+                           "Требуется вход")))))))
+            :css-classes "flex flex-col gap-8 mx-[1rem] sm:mx-[100px] md:mx-[200px] my-4"))))
 
 
 (defun make-page-frame (content &key (title *default-title*))

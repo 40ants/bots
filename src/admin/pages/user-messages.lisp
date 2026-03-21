@@ -39,6 +39,10 @@
                 #:css-classes)
   (:import-from #:40ants-bots/controllers/message
                 #:get-chat-messages)
+  (:import-from #:anaphora
+                #:acond
+                #:awhen
+                #:it)
   (:export #:make-user-messages-page))
 (in-package #:40ants-bots/admin/pages/user-messages)
 
@@ -64,11 +68,40 @@
                  :message message))
 
 
-(defun get-message-text (message)
-  (let* ((raw (message-raw message)))
-    (or (gethash "text" raw)
-        (gethash "caption" raw)
-        (fmt "No \"text\" or \"caption\" in raw message data."))))
+(defun render-message-text (message)
+  (let* ((raw (message-raw message))
+         (text (or (gethash "text" raw)
+                   (gethash "caption" raw))))
+    (with-html ()
+      (acond
+        (text
+         (:p it))
+        ((gethash "document" raw)
+         (let ((filename (gethash "file_name" it)))
+           (cond
+             (filename
+              (:p (fmt "Document shared: ~A" filename)))
+             (t
+              (:p "Document shared, filename unknown.")))))
+        ((gethash "chat_shared" raw)
+         (let ((title (gethash "title" it))
+               (username (gethash "username" it)))
+           (cond
+             ((and username title)
+              (:p "Chat shared:"
+                  (:span " ")
+                  (:a :class "text-blue-600"
+                      :href (fmt "https://t.me/~A" username)
+                      title)))
+             (title
+              (:p (fmt "Chat shared: ~A" title)))
+             (t
+              (:p "Chat shared: no title")))))
+        (t
+         (:p :class "text-red-600"
+             (break)
+             (fmt "Unable to render message ~A"
+                  (mito:object-id message))))))))
 
 
 (defmethod render ((widget message-widget) (theme tailwind-theme))
@@ -78,7 +111,7 @@
                       (fmt "⬇ ~A" (format-date (object-created-at message)))
                       (fmt "⬆ ~A" (format-date (object-created-at message)))))
              (:div
-              (:pre (get-message-text (message widget)))))
+              (:pre (render-message-text (message widget)))))
            :css-classes "w-full")
      ;; :vertical-align :top
      ;; :height '(40)
