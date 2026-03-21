@@ -55,6 +55,7 @@
                             :getter #'identity
                             :cell-maker (lambda (user)
                                           (html ((:a :href (route-url "user"
+                                                                      :namespace '("40ants-bots" "users" "user")
                                                                       :user-id (object-id user))
                                                      (get-username-or-full-name user))))))
                     (column "Created At"
