@@ -35,18 +35,20 @@
 
 
 (defwidget latest-users (ui-widget)
-    ())
+  ((limit :initarg :limit
+          :initform 5
+          :reader latest-users-limit)))
 
 
-(defun make-latest-users ()
-  (make-instance 'latest-users))
+(defun make-latest-users (&key (limit 5))
+  (make-instance 'latest-users :limit limit))
 
 
 (defmethod render ((widget latest-users) (theme tailwind-theme))
   (with-html ()
     (:h2 :class "text-2xl"
          "Latest Users")
-    (let* ((users (get-latest-users))
+    (let* ((users (get-latest-users :limit (latest-users-limit widget)))
            (table
              (make-table
               (list (column "Username"
