@@ -10,28 +10,31 @@
                 #:make-user-page)
   (:import-from #:40ants-bots/admin/pages/user-messages
                 #:make-user-messages-page)
+  (:import-from #:serapeum
+                #:eval-always)
   (:export #:*routes*))
 (in-package #:40ants-bots/admin/routes)
 
 
-(defun get-user-name (user-id)
-  (let ((user (40ants-bots/controllers/user:get-user-by-id user-id)))
+(eval-always
+  (defun get-user-name (user-id)
+    (let ((user (40ants-bots/controllers/user:get-user-by-id user-id)))
+      (cond
+        (user
+         (40ants-bots/controllers/user:get-username-or-full-name user))
+        (t
+         "Unknown"))))
+
+  (defun get-user-route-title (&key user-id)
     (cond
-      (user
-       (40ants-bots/controllers/user:get-username-or-full-name user))
-      (t
-       "Unknown"))))
-
-(defun get-user-route-title (&key user-id)
-  (cond
-    (user-id (format nil "User ~A" (get-user-name user-id)))
-    (t "User")))
+      (user-id (format nil "User ~A" (get-user-name user-id)))
+      (t "User")))
 
 
-(defun get-user-messages-route-title (&key user-id)
-  (cond
-    (user-id (format nil "~A messages" (get-user-name user-id)))
-    (t "User")))
+  (defun get-user-messages-route-title (&key user-id)
+    (cond
+      (user-id (format nil "~A messages" (get-user-name user-id)))
+      (t "User"))))
 
 
 (defroutes (*routes* :namespace "40ants-bots")
