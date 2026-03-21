@@ -24,30 +24,34 @@
 (in-package #:40ants-bots/admin/pages/frame)
 
 
-(defun user-telegram-profile ()
-  (let* ((user (get-current-user))
-         (profiles (when user
+(defun user-telegram-profile (user)
+  (let* ((profiles (when user
                      (user-social-profiles user))))
     (loop for profile in profiles
           thereis (and (eql (profile-service profile)
                             :telegram)
                        profile))))
 
-(defun is-user-admin-p ()
-  (let* ((profile (user-telegram-profile))
+
+(defun get-user-details ()
+  "Returns two values - user object and boollean flag which is T if user is bot admin.ss"
+  (let* ((user (get-current-user))
+         (profile (user-telegram-profile user))
          (metadata (when profile
                      (profile-metadata profile))))
-    (when (and profile
-               (member (gethash "username" metadata)
-                       *site-admins*
-                       :test #'equal))
-      (values t))))
+    (cond
+      ((and profile
+            (member (gethash "username" metadata)
+                    *site-admins*
+                    :test #'equal))
+       (values user t))
+      (t
+       (values user nil)))))
 
-
-;; (declaim (notinline render-frame))
 
 (defun render-frame (content &key (title *default-title*))
-  (let ((admin (is-user-admin-p)))
+  (multiple-value-bind (user is-admin-p)
+      (get-user-details)
     (html ((:header :class "flex"
                     (:div :class "flex-auto text-4xl"
                           title)
@@ -57,9 +61,11 @@
                        (:div content))
                       (t
                        (cond
-                         ((is-user-admin-p)
-                          (let* ((profile (user-telegram-profile))
-                                 (username (gethash "username" (profile-metadata profile))))
+                         (user
+                          (let* ((profile (user-telegram-profile user))
+                                 (metadata (profile-metadata profile))
+                                 (username (gethash "username" metadata)))
+
                             (:div (:span "You logged as")
                                   (:span " ")
                                   (:a :class "text-blue-600"
@@ -74,8 +80,11 @@
                 (:div content))
                (t
                 (cond
-                  (admin
+                  (is-admin-p
                    (:div content))
+                  (user
+                   (:div :class "flex text-4xl"
+                         "У вас нет прав"))
                   (t
                    (:div :class "flex text-4xl"
                          "Требуется вход")))))))
