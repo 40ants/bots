@@ -12,23 +12,28 @@
   (:import-from #:reblocks/html
                 #:with-html)
   (:export #:make-dashboard-page
-           #:dashboard))
+           #:dashboard
+           #:*dashboard-widgets*))
 (in-package #:40ants-bots/admin/pages/dashboard)
 
 
+(defvar *dashboard-widgets*
+  (list (make-latest-users)))
+
+
 (defwidget dashboard (ui-widget)
-    ())
+  ())
 
 
 (defun make-dashboard-page ()
   (make-instance 'dashboard))
 
 
-
 (defmethod render ((widget dashboard) (theme tailwind-theme))
   (with-html ()
     (:h2 :class "text-4xl"
          "Dashboard")
-    (render
-     (make-latest-users)
-     theme)))
+    (:div :class "flex flex-col gap-4")
+    (loop for w in (uiop:ensure-list *dashboard-widgets*)
+          do (render w
+                     theme))))
