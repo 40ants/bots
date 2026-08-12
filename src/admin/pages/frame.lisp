@@ -56,7 +56,10 @@
   (multiple-value-bind (user is-admin-p)
       (get-user-details)
     
-    (let ((crumbs (40ants-routes/breadcrumbs:get-breadcrumbs)))
+    (let ((crumbs (when (40ants-routes/route:current-route-p)
+                    ;; For 404 pages and other error pages there is no
+                    ;; matched routes, thus we should not try to render crumbs:
+                    (40ants-routes/breadcrumbs:get-breadcrumbs))))
       (html ((:header :class "flex"
                       (:div :class "flex-auto text-4xl"
                             title)
