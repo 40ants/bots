@@ -15,6 +15,8 @@ dependencies:
         - brainstorming
         - dispatching-parallel-agents
         - systematic-debugging
+    - dab512/atomic-spec
+    - 199-biotechnologies/claude-deep-research-skill
   mcp: []
 includes: auto
 scripts: {}

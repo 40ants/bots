@@ -1,12 +1,86 @@
 lockfile_version: '1'
-generated_at: '2026-08-16T13:01:29.335518+00:00'
+generated_at: '2026-08-18T21:31:16.835189+00:00'
 apm_version: 0.28.0
 dependencies:
+- repo_url: 199-biotechnologies/claude-deep-research-skill
+  name: deep-research
+  host: github.com
+  resolved_commit: f2f2c0fa4e7617ca84c86b63f4bb40f77a746933
+  version: unknown
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/claude-deep-research-skill
+  - .agents/skills/claude-deep-research-skill/.gitignore
+  - .agents/skills/claude-deep-research-skill/README.md
+  - .agents/skills/claude-deep-research-skill/SKILL.md
+  - .agents/skills/claude-deep-research-skill/reference/continuation.md
+  - .agents/skills/claude-deep-research-skill/reference/html-generation.md
+  - .agents/skills/claude-deep-research-skill/reference/methodology.md
+  - .agents/skills/claude-deep-research-skill/reference/quality-gates.md
+  - .agents/skills/claude-deep-research-skill/reference/report-assembly.md
+  - .agents/skills/claude-deep-research-skill/reference/weasyprint_guidelines.md
+  - .agents/skills/claude-deep-research-skill/requirements.txt
+  - .agents/skills/claude-deep-research-skill/schemas/claim.schema.json
+  - .agents/skills/claude-deep-research-skill/schemas/evidence.schema.json
+  - .agents/skills/claude-deep-research-skill/schemas/run_manifest.schema.json
+  - .agents/skills/claude-deep-research-skill/schemas/source.schema.json
+  - .agents/skills/claude-deep-research-skill/scripts/citation_manager.py
+  - .agents/skills/claude-deep-research-skill/scripts/evidence_store.py
+  - .agents/skills/claude-deep-research-skill/scripts/extract_claims.py
+  - .agents/skills/claude-deep-research-skill/scripts/md_to_html.py
+  - .agents/skills/claude-deep-research-skill/scripts/research_engine.py
+  - .agents/skills/claude-deep-research-skill/scripts/source_evaluator.py
+  - .agents/skills/claude-deep-research-skill/scripts/validate_report.py
+  - .agents/skills/claude-deep-research-skill/scripts/verify_citations.py
+  - .agents/skills/claude-deep-research-skill/scripts/verify_claim_support.py
+  - .agents/skills/claude-deep-research-skill/scripts/verify_html.py
+  - .agents/skills/claude-deep-research-skill/templates/mckinsey_report_template.html
+  - .agents/skills/claude-deep-research-skill/templates/report_template.md
+  - .agents/skills/claude-deep-research-skill/tests/fixtures/invalid_report.md
+  - .agents/skills/claude-deep-research-skill/tests/fixtures/valid_report.md
+  - .agents/skills/claude-deep-research-skill/tests/test_citation_manager.py
+  - .agents/skills/claude-deep-research-skill/tests/test_evidence_store.py
+  - .agents/skills/claude-deep-research-skill/tests/test_extract_claims.py
+  - .agents/skills/claude-deep-research-skill/tests/test_verify_claim_support.py
+  deployed_file_hashes:
+    .agents/skills/claude-deep-research-skill/.gitignore: sha256:d7298b4ebea3ed98f8e5cd5fa3bed70dc854d513daad892e350ea729fc69ae3f
+    .agents/skills/claude-deep-research-skill/README.md: sha256:27d8c58f22baca259a657713d43eadafd3eb1b981cd88d12df77dfb091b6fddd
+    .agents/skills/claude-deep-research-skill/SKILL.md: sha256:0c8e777eb13d37b4d5130f59c9237a82528224ba31b58b774cd490a742df8620
+    .agents/skills/claude-deep-research-skill/reference/continuation.md: sha256:0ed19331d7c7f5775536dfd39c0ae3ce3466ab5797464fa247efdfeea5f7913d
+    .agents/skills/claude-deep-research-skill/reference/html-generation.md: sha256:a8ebc64d52b7cd9a78fee69f1f274f1ab791106ebd3449f17800735146ef644f
+    .agents/skills/claude-deep-research-skill/reference/methodology.md: sha256:d17cab6a258c2b5fe8514b0eda88395fe0d3dac3711c21480f2229e182666ec5
+    .agents/skills/claude-deep-research-skill/reference/quality-gates.md: sha256:60b969ceee0346d7e219a66b881c554f0fa452ff5a598d858f7a8e30a19fc24d
+    .agents/skills/claude-deep-research-skill/reference/report-assembly.md: sha256:22a41bbd6fe7bf60542ee5b2f5d0db2608371283d273881d2f3758e9a90e6fdf
+    .agents/skills/claude-deep-research-skill/reference/weasyprint_guidelines.md: sha256:d70421ea6985664d9fd1feaae94f36e3c749e74eb8703bc67236df9489165cdb
+    .agents/skills/claude-deep-research-skill/requirements.txt: sha256:de63fe8300f89040ccfb6229aee53b61345fa478946e043587d7f65d46df4ffa
+    .agents/skills/claude-deep-research-skill/schemas/claim.schema.json: sha256:1e0b780f12bdb35bc3bc9cd07becf1d7f5f30de88bd9fb99fe357d3d91f8e9dd
+    .agents/skills/claude-deep-research-skill/schemas/evidence.schema.json: sha256:98939f1fc14006bea38404349818585ca6818a749ddf63aafbf933a19eef3e00
+    .agents/skills/claude-deep-research-skill/schemas/run_manifest.schema.json: sha256:34abe54027d76bec15f716c9ea471baed533a6f4c1a3db2a85ef80831b9274ec
+    .agents/skills/claude-deep-research-skill/schemas/source.schema.json: sha256:2ac2697ec8c2578c4fe550da5ab4c3dcb5e4de4fa0141e726919085a023aff49
+    .agents/skills/claude-deep-research-skill/scripts/citation_manager.py: sha256:02334e5286b2a541fb2a6409959ea43ac7bc8b749d3cbeb427ff7fafb78d1a02
+    .agents/skills/claude-deep-research-skill/scripts/evidence_store.py: sha256:6deba75f5902be0d272f2992f54988b8a316fc4bc44cd3b094b812bb4409d140
+    .agents/skills/claude-deep-research-skill/scripts/extract_claims.py: sha256:21a3cbfe711e466926e47b60a5294a82f3f956310309c469fc8a429203a56eb8
+    .agents/skills/claude-deep-research-skill/scripts/md_to_html.py: sha256:506c38771d32fbccf931a27b7b64cf20c0df5113b2914b051c17e9d178fc1b17
+    .agents/skills/claude-deep-research-skill/scripts/research_engine.py: sha256:5eb7ef01642e8158d7e7d8eb044a71aca3334493f4b2c6d7b4e1299e074cbfd6
+    .agents/skills/claude-deep-research-skill/scripts/source_evaluator.py: sha256:8421efa7b862bb139108e6da40b285706188cb272843bf39082c8b9888d5050e
+    .agents/skills/claude-deep-research-skill/scripts/validate_report.py: sha256:851c1de275c039b8e5858785010181500960b05a9be463cdd6cecd5bbf101aa3
+    .agents/skills/claude-deep-research-skill/scripts/verify_citations.py: sha256:b77a9430aa2c9aec47a88434237879a02db75f87cd35a2429a5d7584f234f6ef
+    .agents/skills/claude-deep-research-skill/scripts/verify_claim_support.py: sha256:b172e88a3844e1ba590a7fc9a9d141ef310f5e628231e77448e9c45a7d881bc8
+    .agents/skills/claude-deep-research-skill/scripts/verify_html.py: sha256:28bbba06906fa2f9bae87ea20b68390ce4f4bc76f00343991a8ad2119e21b36c
+    .agents/skills/claude-deep-research-skill/templates/mckinsey_report_template.html: sha256:6b2d742f5279e78df71543bfb6c4fd88d7ee1c726b54fa945616307b2157c1f1
+    .agents/skills/claude-deep-research-skill/templates/report_template.md: sha256:50788e213c78d42a2fcedbfe153e4c34bbea5b7b978f8646f1b4b5c83ba04115
+    .agents/skills/claude-deep-research-skill/tests/fixtures/invalid_report.md: sha256:9b5177dbd31b80ea1d1e16f159989f232f6b6875dbc7ea7fddf70ba1fd0ad311
+    .agents/skills/claude-deep-research-skill/tests/fixtures/valid_report.md: sha256:e6a24a5deec1ec65279cb446c58f9309a3d6f4e040e37f1bda09c64a73829b5a
+    .agents/skills/claude-deep-research-skill/tests/test_citation_manager.py: sha256:5e882bdd6c32403e95942bab56fb0ef09543468a0a289a336fb01c0453d8fb1e
+    .agents/skills/claude-deep-research-skill/tests/test_evidence_store.py: sha256:2c88f366833808cd7ad89784993eea8ba4c832d560fed6503182e919b339ddfc
+    .agents/skills/claude-deep-research-skill/tests/test_extract_claims.py: sha256:9b6ce7fe815f95b1e238ed3c1ba6e65b22d5bc8abbc4599e50fcf6063692c0d7
+    .agents/skills/claude-deep-research-skill/tests/test_verify_claim_support.py: sha256:5402a8d6ca02fe6cfd3d73b0208191e78e00561ad5932e793ca4bfb88ac4c651
+  content_hash: sha256:ea1e3a0f58097c73f41654a9934b92c74c05a866e26a89d1947fb27e7eaab325
 - repo_url: 40ants/ai
   name: common-lisp-skills
   host: github.com
-  resolved_commit: 6348705112b0ebef5e1ee9ae7a07919ba56db494
-  version: 0.1.0
+  resolved_commit: f62612b8c6c195fa41174ca16abe8ad35662e363
+  version: 0.1.1
   virtual_path: plugins/common-lisp-skills
   is_virtual: true
   package_type: marketplace_plugin
@@ -21,6 +95,9 @@ dependencies:
   - .agents/skills/defining-clos-classes/SKILL.md
   - .agents/skills/handling-json-in-common-lisp
   - .agents/skills/handling-json-in-common-lisp/SKILL.md
+  - .agents/skills/lint-common-lisp
+  - .agents/skills/lint-common-lisp/SKILL.md
+  - .agents/skills/lint-common-lisp/agents/openai.yaml
   - .agents/skills/logging-with-log4cl
   - .agents/skills/logging-with-log4cl/SKILL.md
   - .agents/skills/testing-with-rove
@@ -38,12 +115,37 @@ dependencies:
     .agents/skills/clearing-asdf-fasl-cache/clear-fasl-cache.sh: sha256:9c990ad85e8c559f75d0d4435736b317b9486307b2830ec58abb253efd922173
     .agents/skills/defining-clos-classes/SKILL.md: sha256:c3cb247882066fe00d8e66d7c0c05db3f82a25bc9ab79351887b79d2081804ba
     .agents/skills/handling-json-in-common-lisp/SKILL.md: sha256:d30a07e0fe19a246a6f3a6f94ef39d555af7c40ff688310615a7bfc45bcb402f
+    .agents/skills/lint-common-lisp/SKILL.md: sha256:5a5c40278cb2d282b74b9db6f7f5a60962ad5e094a11fb3268caf844939dcd3c
+    .agents/skills/lint-common-lisp/agents/openai.yaml: sha256:69cfdbd3aead2f1a3ba737d1665b446fc6c17ecd6e90194c1d2413f76ee106d6
     .agents/skills/logging-with-log4cl/SKILL.md: sha256:eeb92fd4105be0b20e74532e2cfd1d267541d0c43124753d4e2d7e727b61b9d3
     .agents/skills/testing-with-rove/SKILL.md: sha256:2f4516d23100d112d0b39ff5bf50e8085ba83e8ee182c477c2663fdcdbca82d5
     .agents/skills/using-common-lisp-repl/SKILL.md: sha256:449ce4b78d66f9a6cbaf29ceaf22d810c61082856c2cb0453f250cf20c467455
     .agents/skills/writing-40ants-doc-documentation/SKILL.md: sha256:abf7a08a1795d1cefd9daf290582c0d95ecb3c0bfa9b19bdf567a67ecee236d8
     .agents/skills/writing-common-lisp/SKILL.md: sha256:23885e7aa810373c95bc1ecedcf00799b46adc000373556a3762ecf4e48dd06f
-  content_hash: sha256:e1271ff1d0b6a2611fd8e6260efd7a3b9034b8abdce77e88f655b12cec738dcf
+  content_hash: sha256:477384ee44847a0e90938e7b7b6ddfca3178abb358b7e37e4c15883c551777ac
+  declared_license: MIT
+- repo_url: dab512/atomic-spec
+  name: atomic-spec
+  host: github.com
+  resolved_commit: 594a44f0f8c8916faf96a3c13e3247e83b7ae2d3
+  version: 0.1.0
+  package_type: marketplace_plugin
+  deployed_files:
+  - .agents/skills/atomic-spec-orchestrator
+  - .agents/skills/atomic-spec-orchestrator/README.md
+  - .agents/skills/atomic-spec-orchestrator/SKILL.md
+  - .agents/skills/atomic-spec-orchestrator/assets/atom-template.spec.md
+  - .agents/skills/atomic-spec-orchestrator/references/analyst.md
+  - .agents/skills/atomic-spec-orchestrator/references/developer.md
+  - .agents/skills/atomic-spec-orchestrator/references/tester.md
+  deployed_file_hashes:
+    .agents/skills/atomic-spec-orchestrator/README.md: sha256:35dd28f3c6bdbe273c39bf9c86c173ccf54a264683cad00fa5a5be36823c17bd
+    .agents/skills/atomic-spec-orchestrator/SKILL.md: sha256:ee9cc0f49d8d7d6e3cf67c59fe2d7832d3200b030cb745ed2080c6310373daba
+    .agents/skills/atomic-spec-orchestrator/assets/atom-template.spec.md: sha256:420e739dda91d42803f5df3efeb431fc1493fef391bac85e907449ddc42d337e
+    .agents/skills/atomic-spec-orchestrator/references/analyst.md: sha256:34b24ec89a10bae26b2ab037fe0b8fbd5352114eb4944000a3a0a5f02ee47d1b
+    .agents/skills/atomic-spec-orchestrator/references/developer.md: sha256:51cf4e0308ff4ff483565c5bcd7cce093460304286cb4069bd8e73e13e7b0a92
+    .agents/skills/atomic-spec-orchestrator/references/tester.md: sha256:1d82e54b974ba0839a04a8d9b95d57daf75fb710df67df9988431318676ca065
+  content_hash: sha256:298d0e29c1132096393ee3aca044d22add32c107827c7d8912fe595fe3357f9f
   declared_license: MIT
 - repo_url: obra/superpowers
   name: superpowers
@@ -103,6 +205,69 @@ dependencies:
   - systematic-debugging
   declared_license: MIT
 deployments:
+- kind: project-relative
+  target: agents
+  value: .agents/skills/atomic-spec-orchestrator
+  runtime: null
+  scope: project
+  owners:
+  - dab512/atomic-spec
+  active_owner: dab512/atomic-spec
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/atomic-spec-orchestrator/README.md
+  runtime: null
+  scope: project
+  owners:
+  - dab512/atomic-spec
+  active_owner: dab512/atomic-spec
+  content_hash: sha256:35dd28f3c6bdbe273c39bf9c86c173ccf54a264683cad00fa5a5be36823c17bd
+- kind: project-relative
+  target: agents
+  value: .agents/skills/atomic-spec-orchestrator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - dab512/atomic-spec
+  active_owner: dab512/atomic-spec
+  content_hash: sha256:ee9cc0f49d8d7d6e3cf67c59fe2d7832d3200b030cb745ed2080c6310373daba
+- kind: project-relative
+  target: agents
+  value: .agents/skills/atomic-spec-orchestrator/assets/atom-template.spec.md
+  runtime: null
+  scope: project
+  owners:
+  - dab512/atomic-spec
+  active_owner: dab512/atomic-spec
+  content_hash: sha256:420e739dda91d42803f5df3efeb431fc1493fef391bac85e907449ddc42d337e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/atomic-spec-orchestrator/references/analyst.md
+  runtime: null
+  scope: project
+  owners:
+  - dab512/atomic-spec
+  active_owner: dab512/atomic-spec
+  content_hash: sha256:34b24ec89a10bae26b2ab037fe0b8fbd5352114eb4944000a3a0a5f02ee47d1b
+- kind: project-relative
+  target: agents
+  value: .agents/skills/atomic-spec-orchestrator/references/developer.md
+  runtime: null
+  scope: project
+  owners:
+  - dab512/atomic-spec
+  active_owner: dab512/atomic-spec
+  content_hash: sha256:51cf4e0308ff4ff483565c5bcd7cce093460304286cb4069bd8e73e13e7b0a92
+- kind: project-relative
+  target: agents
+  value: .agents/skills/atomic-spec-orchestrator/references/tester.md
+  runtime: null
+  scope: project
+  owners:
+  - dab512/atomic-spec
+  active_owner: dab512/atomic-spec
+  content_hash: sha256:1d82e54b974ba0839a04a8d9b95d57daf75fb710df67df9988431318676ca065
 - kind: project-relative
   target: agents
   value: .agents/skills/avoiding-common-lisp-pitfalls
@@ -213,6 +378,303 @@ deployments:
   content_hash: sha256:77eb44a4ec3408bb3dafb872288ecd94beb8cf21da4f2bafa54fd08255d7808b
 - kind: project-relative
   target: agents
+  value: .agents/skills/claude-deep-research-skill
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/.gitignore
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:d7298b4ebea3ed98f8e5cd5fa3bed70dc854d513daad892e350ea729fc69ae3f
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/README.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:27d8c58f22baca259a657713d43eadafd3eb1b981cd88d12df77dfb091b6fddd
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:0c8e777eb13d37b4d5130f59c9237a82528224ba31b58b774cd490a742df8620
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/reference/continuation.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:0ed19331d7c7f5775536dfd39c0ae3ce3466ab5797464fa247efdfeea5f7913d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/reference/html-generation.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:a8ebc64d52b7cd9a78fee69f1f274f1ab791106ebd3449f17800735146ef644f
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/reference/methodology.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:d17cab6a258c2b5fe8514b0eda88395fe0d3dac3711c21480f2229e182666ec5
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/reference/quality-gates.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:60b969ceee0346d7e219a66b881c554f0fa452ff5a598d858f7a8e30a19fc24d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/reference/report-assembly.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:22a41bbd6fe7bf60542ee5b2f5d0db2608371283d273881d2f3758e9a90e6fdf
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/reference/weasyprint_guidelines.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:d70421ea6985664d9fd1feaae94f36e3c749e74eb8703bc67236df9489165cdb
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/requirements.txt
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:de63fe8300f89040ccfb6229aee53b61345fa478946e043587d7f65d46df4ffa
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/schemas/claim.schema.json
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:1e0b780f12bdb35bc3bc9cd07becf1d7f5f30de88bd9fb99fe357d3d91f8e9dd
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/schemas/evidence.schema.json
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:98939f1fc14006bea38404349818585ca6818a749ddf63aafbf933a19eef3e00
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/schemas/run_manifest.schema.json
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:34abe54027d76bec15f716c9ea471baed533a6f4c1a3db2a85ef80831b9274ec
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/schemas/source.schema.json
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:2ac2697ec8c2578c4fe550da5ab4c3dcb5e4de4fa0141e726919085a023aff49
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/citation_manager.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:02334e5286b2a541fb2a6409959ea43ac7bc8b749d3cbeb427ff7fafb78d1a02
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/evidence_store.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:6deba75f5902be0d272f2992f54988b8a316fc4bc44cd3b094b812bb4409d140
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/extract_claims.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:21a3cbfe711e466926e47b60a5294a82f3f956310309c469fc8a429203a56eb8
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/md_to_html.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:506c38771d32fbccf931a27b7b64cf20c0df5113b2914b051c17e9d178fc1b17
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/research_engine.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:5eb7ef01642e8158d7e7d8eb044a71aca3334493f4b2c6d7b4e1299e074cbfd6
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/source_evaluator.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:8421efa7b862bb139108e6da40b285706188cb272843bf39082c8b9888d5050e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/validate_report.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:851c1de275c039b8e5858785010181500960b05a9be463cdd6cecd5bbf101aa3
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/verify_citations.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:b77a9430aa2c9aec47a88434237879a02db75f87cd35a2429a5d7584f234f6ef
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/verify_claim_support.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:b172e88a3844e1ba590a7fc9a9d141ef310f5e628231e77448e9c45a7d881bc8
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/scripts/verify_html.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:28bbba06906fa2f9bae87ea20b68390ce4f4bc76f00343991a8ad2119e21b36c
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/templates/mckinsey_report_template.html
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:6b2d742f5279e78df71543bfb6c4fd88d7ee1c726b54fa945616307b2157c1f1
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/templates/report_template.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:50788e213c78d42a2fcedbfe153e4c34bbea5b7b978f8646f1b4b5c83ba04115
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/tests/fixtures/invalid_report.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:9b5177dbd31b80ea1d1e16f159989f232f6b6875dbc7ea7fddf70ba1fd0ad311
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/tests/fixtures/valid_report.md
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:e6a24a5deec1ec65279cb446c58f9309a3d6f4e040e37f1bda09c64a73829b5a
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/tests/test_citation_manager.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:5e882bdd6c32403e95942bab56fb0ef09543468a0a289a336fb01c0453d8fb1e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/tests/test_evidence_store.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:2c88f366833808cd7ad89784993eea8ba4c832d560fed6503182e919b339ddfc
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/tests/test_extract_claims.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:9b6ce7fe815f95b1e238ed3c1ba6e65b22d5bc8abbc4599e50fcf6063692c0d7
+- kind: project-relative
+  target: agents
+  value: .agents/skills/claude-deep-research-skill/tests/test_verify_claim_support.py
+  runtime: null
+  scope: project
+  owners:
+  - 199-biotechnologies/claude-deep-research-skill
+  active_owner: 199-biotechnologies/claude-deep-research-skill
+  content_hash: sha256:5402a8d6ca02fe6cfd3d73b0208191e78e00561ad5932e793ca4bfb88ac4c651
+- kind: project-relative
+  target: agents
   value: .agents/skills/clearing-asdf-fasl-cache
   runtime: null
   scope: project
@@ -292,6 +754,33 @@ deployments:
   - 40ants/ai/plugins/common-lisp-skills
   active_owner: 40ants/ai/plugins/common-lisp-skills
   content_hash: sha256:d30a07e0fe19a246a6f3a6f94ef39d555af7c40ff688310615a7bfc45bcb402f
+- kind: project-relative
+  target: agents
+  value: .agents/skills/lint-common-lisp
+  runtime: null
+  scope: project
+  owners:
+  - 40ants/ai/plugins/common-lisp-skills
+  active_owner: 40ants/ai/plugins/common-lisp-skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/lint-common-lisp/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - 40ants/ai/plugins/common-lisp-skills
+  active_owner: 40ants/ai/plugins/common-lisp-skills
+  content_hash: sha256:5a5c40278cb2d282b74b9db6f7f5a60962ad5e094a11fb3268caf844939dcd3c
+- kind: project-relative
+  target: agents
+  value: .agents/skills/lint-common-lisp/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - 40ants/ai/plugins/common-lisp-skills
+  active_owner: 40ants/ai/plugins/common-lisp-skills
+  content_hash: sha256:69cfdbd3aead2f1a3ba737d1665b446fc6c17ecd6e90194c1d2413f76ee106d6
 - kind: project-relative
   target: agents
   value: .agents/skills/logging-with-log4cl
