@@ -4,3 +4,7 @@
 .#*
 .*.~undo-tree~
 *.fasl
+
+
+# APM dependencies
+apm_modules/
